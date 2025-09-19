@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>صفحه شخصی پیمان</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f9;
+      color: #333;
+      text-align: center;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 40px 20px;
+    }
+
+    header img {
+      width: 120px;
+      border-radius: 50%;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin: 10px 0;
+    }
+
+    p {
+      max-width: 600px;
+      margin: 10px auto;
+      line-height: 1.6;
+    }
+
+    a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    section {
+      padding: 40px 20px;
+    }
+
+    .projects a {
+      display: block;
+      margin: 10px 0;
+    }
+
+    footer {
+      background: #2c3e50;
+      color: white;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="your-photo.jpg" alt="پیمان">
+    <h1>سلام، من پیمان هستم!</h1>
+    <p>این صفحه شخصی منه، پروژه‌ها، مقالات و لینک‌هایم رو می‌تونی اینجا پیدا کنی.</p>
+  </header>
+
+  <section class="projects">
+    <h2>پروژه‌ها</h2>
+    <a href="#">پروژه ۱</a>
+    <a href="#">پروژه ۲</a>
+    <a href="#">پروژه ۳</a>
+  </section>
+
+  <section class="links">
+    <h2>شبکه‌ها و ارتباطات</h2>
+    <p>
+      <a href="https://github.com/yourusername">GitHub</a> |
+      <a href="https://linkedin.com/in/yourusername">LinkedIn</a> |
+      <a href="https://x.com/yourusername">Twitter</a>
+    </p>
+  </section>
+
+  <footer>
+    <p>© 2025 پیمان. تمام حقوق محفوظ است.</p>
+  </footer>
+
+</body>
+</html>
