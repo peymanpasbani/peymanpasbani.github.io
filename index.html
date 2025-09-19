@@ -4,57 +4,93 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>صفحه شخصی پیمان</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-y7QZVw2k0E2mQ+J6t1k+9uZ1NfF4g9kMvVt5pJ/U6kV1K2kT4g+mj8e6a2s7mZtGb6lV4V6vjRA+OqZ9U5XfHg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Roboto', sans-serif;
       margin: 0;
       padding: 0;
-      background: #f4f4f9;
+      background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
       color: #333;
-      text-align: center;
     }
 
     header {
-      background: #2c3e50;
+      background: #1abc9c;
       color: white;
-      padding: 40px 20px;
+      padding: 60px 20px;
+      text-align: center;
     }
 
     header img {
-      width: 120px;
+      width: 140px;
+      height: 140px;
       border-radius: 50%;
+      border: 4px solid white;
       margin-bottom: 20px;
+      object-fit: cover;
     }
 
-    h1 {
-      margin: 10px 0;
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
     }
 
-    p {
-      max-width: 600px;
-      margin: 10px auto;
+    header p {
+      margin-top: 10px;
+      font-size: 1.1em;
       line-height: 1.6;
-    }
-
-    a {
-      color: #3498db;
-      text-decoration: none;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     section {
-      padding: 40px 20px;
+      padding: 50px 20px;
+      text-align: center;
+    }
+
+    section h2 {
+      font-size: 2em;
+      color: #2c3e50;
+      margin-bottom: 30px;
     }
 
     .projects a {
-      display: block;
-      margin: 10px 0;
+      display: inline-block;
+      margin: 10px 15px;
+      padding: 12px 25px;
+      background: #1abc9c;
+      color: white;
+      text-decoration: none;
+      border-radius: 25px;
+      transition: 0.3s;
+    }
+
+    .projects a:hover {
+      background: #16a085;
+    }
+
+    .social a {
+      margin: 0 15px;
+      color: #1abc9c;
+      font-size: 2em;
+      transition: 0.3s;
+      text-decoration: none;
+    }
+
+    .social a:hover {
+      color: #16a085;
     }
 
     footer {
       background: #2c3e50;
       color: white;
-      padding: 20px;
+      padding: 25px 20px;
+      text-align: center;
+      font-size: 0.9em;
     }
+
   </style>
 </head>
 <body>
@@ -62,7 +98,7 @@
   <header>
     <img src="your-photo.jpg" alt="پیمان">
     <h1>سلام، من پیمان هستم!</h1>
-    <p>این صفحه شخصی منه، پروژه‌ها، مقالات و لینک‌هایم رو می‌تونی اینجا پیدا کنی.</p>
+    <p>این صفحه شخصی منه؛ پروژه‌ها، مقالات و لینک‌های من رو می‌تونی اینجا پیدا کنی. عاشق تکنولوژی و یادگیری چیزهای جدیدم!</p>
   </header>
 
   <section class="projects">
@@ -72,13 +108,11 @@
     <a href="#">پروژه ۳</a>
   </section>
 
-  <section class="links">
-    <h2>شبکه‌ها و ارتباطات</h2>
-    <p>
-      <a href="https://github.com/yourusername">GitHub</a> |
-      <a href="https://linkedin.com/in/yourusername">LinkedIn</a> |
-      <a href="https://x.com/yourusername">Twitter</a>
-    </p>
+  <section class="social">
+    <h2>ارتباط با من</h2>
+    <a href="https://x.com/yourusername" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+    <a href="https://instagram.com/yourusername" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://wa.me/your-number" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
   </section>
 
   <footer>
