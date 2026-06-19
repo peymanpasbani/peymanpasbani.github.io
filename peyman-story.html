@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0A1A22">
+<title>استوری · پیمان</title>
+<link rel="preconnect" href="https://fonts.bunny.net">
+<link href="https://fonts.bunny.net/css?family=vazirmatn:400,600,700,800,900|lalezar:400|jetbrains-mono:400,500,600,700" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --ink:        #0A1A22;
+    --ink-2:      #102832;
+    --ink-3:      #163542;
+    --amber:      #FFB627;
+    --coral:      #FF6B4A;
+    --mint:       #46E0B8;
+    --sky:        #6FC8FF;
+    --lavender:   #B9A6FF;
+    --text:       #ECE7DC;
+    --muted:      #9FB6BC;
+    --line:       rgba(236,231,220,0.16);
+    --line-soft:  rgba(236,231,220,0.08);
+  }
+
+  html, body {
+    width: 100%;
+    height: 100dvh;
+    height: 100svh;
+    overflow: hidden;
+    background: var(--ink);
+    overscroll-behavior: none;
+  }
+  body {
+    color: var(--text);
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: 'JetBrains Mono', monospace; direction: ltr; unicode-bidi: isolate; }
+
+  .story {
+    width: 100%;
+    height: 100dvh;
+    height: 100svh;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    /* safe-area padding so iOS notch/home-bar never clip content */
+    padding-top: max(7vh, env(safe-area-inset-top) + 18px);
+    padding-bottom: max(4vh, env(safe-area-inset-bottom) + 14px);
+  }
+
+  /* background texture — same language as the site, scaled for small screens */
+  .story::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--line-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size: 9vw 9vw;
+    mask-image: radial-gradient(ellipse 85% 50% at 50% 36%, black 25%, transparent 100%);
+  }
+  .story::after {
+    content: '';
+    position: absolute; top: -18vh; right: -22vw;
+    width: 75vw; height: 75vw; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,182,39,0.13) 0%, rgba(255,107,74,0.06) 50%, transparent 70%);
+  }
+  .glow-bottom {
+    position: absolute; bottom: -16vh; left: -20vw;
+    width: 70vw; height: 70vw; border-radius: 50%;
+    background: radial-gradient(circle, rgba(70,224,184,0.10) 0%, transparent 70%);
+  }
+
+  /* TOP — terminal badge */
+  .top-bar {
+    position: relative; z-index: 1;
+    padding: 0 7vw;
+  }
+  .terminal-badge {
+    display: inline-flex; align-items: center; gap: 2vw;
+    background: rgba(70,224,184,0.09); border: 1px solid rgba(70,224,184,0.28);
+    border-radius: 10px; padding: 2vw 4vw;
+  }
+  .terminal-badge .mono {
+    font-size: clamp(12px, 3.4vw, 16px); color: var(--mint); display: flex; align-items: center; gap: 2vw;
+  }
+  .terminal-badge .mono::before { content: '▶'; font-size: 0.5em; opacity: 0.75; }
+  .cursor { display: inline-block; width: 0.5em; height: 1em; background: var(--mint); border-radius: 2px; margin-inline-start: 2px; animation: blink 1s step-end infinite; }
+  @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.2; } }
+
+  /* MIDDLE — headline */
+  .mid {
+    position: relative; z-index: 1;
+    flex: 1;
+    padding: 0 7vw;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    gap: 3.2vh;
+    min-height: 0;
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: clamp(11px, 3.2vw, 14px); letter-spacing: 3px;
+    color: var(--coral); text-transform: uppercase;
+  }
+  .headline {
+    font-size: clamp(34px, 9.6vw, 54px); font-weight: 900; line-height: 1.22; letter-spacing: -0.5px;
+    color: var(--text);
+  }
+  .headline .dot { color: var(--amber); }
+  .headline .hi { color: var(--amber); }
+
+  .subtext {
+    font-size: clamp(15px, 4.3vw, 19px); line-height: 1.85; color: var(--muted);
+    max-width: 92%;
+  }
+  .subtext strong { color: var(--text); font-weight: 600; }
+
+  .chips {
+    display: flex; flex-wrap: wrap; gap: 1.8vw; margin-top: 0.5vh;
+  }
+  .chip {
+    font-family: 'JetBrains Mono', monospace; font-size: clamp(10px, 2.9vw, 12px);
+    padding: 1.6vw 3.4vw; border-radius: 8px;
+    background: rgba(255,255,255,0.045); border: 1px solid var(--line);
+    color: var(--muted); letter-spacing: 0.5px;
+  }
+  .chip.hi {
+    border-color: rgba(255,182,39,0.4); color: var(--amber);
+    background: rgba(255,182,39,0.1);
+  }
+
+  /* BOTTOM — boarding-pass stub footer */
+  .bottom {
+    position: relative; z-index: 1;
+    padding: 0 7vw;
+  }
+  .stub {
+    display: flex; align-items: stretch;
+    background: var(--ink-2); border: 1px solid var(--line);
+    border-radius: 16px; overflow: hidden;
+  }
+  .stub-tab {
+    flex: 0 0 11vw;
+    background: color-mix(in srgb, var(--amber) 16%, var(--ink-3));
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.6vh;
+    border-inline-end: 1px dashed var(--line);
+  }
+  .stub-tab .mono {
+    font-size: clamp(9px, 2.6vw, 11px); font-weight: 600; color: var(--amber);
+    writing-mode: vertical-rl; text-orientation: mixed; letter-spacing: 2px;
+  }
+  .stub-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mint); }
+
+  .stub-body { flex: 1; padding: 3.4vw 4.2vw; display: flex; align-items: center; justify-content: space-between; gap: 3vw; min-width: 0; }
+  .stub-label { font-family: 'JetBrains Mono', monospace; font-size: clamp(8.5px, 2.4vw, 10px); letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; margin-bottom: 0.8vh; }
+  .stub-title { font-size: clamp(14px, 4vw, 17px); font-weight: 700; color: var(--text); }
+  .stub-status { display: flex; align-items: center; gap: 1.6vw; font-family: 'JetBrains Mono', monospace; font-size: clamp(9px, 2.6vw, 11px); color: var(--mint); white-space: nowrap; flex-shrink: 0; }
+  .pulse-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--mint); animation: blink 1.3s ease infinite; flex-shrink: 0; }
+
+  .footer-row {
+    margin-top: 2.6vh;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-family: 'Lalezar', sans-serif; font-size: clamp(17px, 5vw, 21px); letter-spacing: 1px; color: var(--amber);
+  }
+  .barcode {
+    width: 14vw; height: 2.6vh; max-width: 64px;
+    background-image: repeating-linear-gradient(90deg,
+      var(--muted) 0 2px, transparent 2px 4px,
+      var(--muted) 4px 8px, transparent 8px 10px,
+      var(--muted) 10px 14px, transparent 14px 18px,
+      var(--muted) 18px 20px, transparent 20px 24px);
+    opacity: 0.55;
+  }
+</style>
+</head>
+<body>
+<div class="story">
+  <div class="glow-bottom"></div>
+
+  <div class="top-bar">
+    <div class="terminal-badge">
+      <span class="mono">peyman@amadeus:~$ open ideas.log<span class="cursor"></span></span>
+    </div>
+  </div>
+
+  <div class="mid">
+    <div class="eyebrow">// یه گوشه‌ی شخصی</div>
+    <div class="headline">
+      ایده‌هامو این‌جا<br>
+      می‌نویسم<span class="dot">.</span><br>
+      <span class="hi">و درباره‌شون حرف می‌زنم</span><span class="dot">.</span>
+    </div>
+    <p class="subtext">
+      از فناوری سفر تا چیزایی که هنوز فقط تو سرمَن — <strong>بدون ادعای آماده‌بودن</strong>، همین‌جا ثبت می‌کنم.
+    </p>
+    <div class="chips">
+      <span class="chip hi">Ideas</span>
+      <span class="chip hi">Travel Tech</span>
+      <span class="chip">Side Projects</span>
+      <span class="chip">WIP</span>
+      <span class="chip">Python</span>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="stub">
+      <div class="stub-tab">
+        <span class="mono">IDEA·LOG</span>
+        <span class="stub-dot"></span>
+      </div>
+      <div class="stub-body">
+        <div>
+          <div class="stub-label">status</div>
+          <div class="stub-title">یه سایت برای ایده‌هام</div>
+        </div>
+        <div class="stub-status"><span class="pulse-dot"></span>در حال نوشتن</div>
+      </div>
+    </div>
+    <div class="footer-row">
+      <div class="logo">PEYMAN</div>
+      <div class="barcode"></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
