@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ایده‌های گردشگری | Travel Ideas</title>
+<link rel="preconnect" href="https://fonts.bunny.net">
+<link href="https://fonts.bunny.net/css?family=vazirmatn:300,400,500,600,700,800,900|lalezar:400|jetbrains-mono:400,500,600,700" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* ── color tokens ── */
+    --ink:        #0A1A22;   /* page base — deep teal-ink, not black */
+    --ink-2:      #102832;   /* card / panel surface */
+    --ink-3:      #163542;   /* raised surface — ticker, stub */
+    --paper:      #F2ECDC;   /* ticket-stub paper accent */
+    --paper-ink:  #1C2A22;   /* text on paper */
+    --amber:      #FFB627;   /* primary accent — FIDS amber */
+    --coral:      #FF6B4A;   /* secondary accent — sunset coral */
+    --mint:       #46E0B8;   /* status: live */
+    --sky:        #6FC8FF;   /* status: idea */
+    --lavender:   #B9A6FF;   /* geo: global */
+    --text:       #ECE7DC;   /* primary text on dark */
+    --muted:      #92ABB2;   /* secondary text on dark — AA-safe */
+    --line:       rgba(236,231,220,0.14);
+    --line-soft:  rgba(236,231,220,0.07);
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--text);
+    font-family: 'Vazirmatn', Tahoma, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--amber); color: #1C1300; }
+
+  :focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; border-radius: 4px; }
+
+  .mono { font-family: 'JetBrains Mono', monospace; direction: ltr; unicode-bidi: isolate; }
+  .stamp-font { font-family: 'Lalezar', sans-serif; }
+
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  /* ───────────────────── NAV ───────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 16px 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(10,26,34,0.82);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-logo {
+    font-family: 'Lalezar', sans-serif;
+    font-size: 19px;
+    letter-spacing: 1px;
+    color: var(--amber);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+  .nav-role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    direction: ltr;
+  }
+  .barcode {
+    width: 30px; height: 14px;
+    background-image: repeating-linear-gradient(90deg,
+      var(--muted) 0 1px, transparent 1px 2px,
+      var(--muted) 2px 4px, transparent 4px 5px,
+      var(--muted) 5px 7px, transparent 7px 9px,
+      var(--muted) 9px 10px, transparent 10px 12px);
+    opacity: 0.6;
+  }
+
+  /* ───────────────────── HERO ───────────────────── */
+  .hero { padding: 90px 20px 36px; position: relative; }
+
+  .hero-eyebrow {
+    font-size: 11px; letter-spacing: 2.5px; color: var(--coral);
+    margin-bottom: 14px; display: block; opacity: 0;
+    animation: fade-up 0.5s ease forwards 0.05s;
+  }
+
+  .status-dot-live { display:inline-block; width:6px; height:6px; border-radius:50%; background: var(--mint); margin-inline-end: 5px; }
+  .status-dot-pulse { animation: blink 1.3s ease infinite; }
+
+  .hero-title {
+    font-size: clamp(28px, 8vw, 42px);
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 14px;
+  }
+  .hero-title .line { display: block; overflow: hidden; }
+  .hero-title .line span {
+    display: block; opacity: 0; transform: translateY(60%);
+    animation: slide-up 0.55s cubic-bezier(0.16,1,0.3,1) forwards 0.15s;
+  }
+  .hero-title .accent { color: var(--amber); }
+
+  @keyframes slide-up { to { opacity: 1; transform: translateY(0); } }
+  @keyframes fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .hero-desc {
+    font-size: 14.5px; color: var(--muted); line-height: 1.85;
+    max-width: 480px;
+    opacity: 0; animation: fade-up 0.55s ease forwards 0.35s;
+  }
+
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+  /* ───────────────────── IDEAS SECTION ───────────────────── */
+  .ideas-section { padding: 50px 20px 70px; }
+  .section-header { margin-bottom: 26px; }
+  .section-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--coral); text-transform: uppercase; margin-bottom: 8px; }
+  .section-title { font-size: 21px; font-weight: 700; }
+
+  .filter-tabs { display: flex; gap: 7px; margin-bottom: 26px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
+  .filter-tabs::-webkit-scrollbar { display: none; }
+  .filter-tab {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 7px 14px;
+    border-radius: 100px; border: 1px solid var(--line); color: var(--muted);
+    background: transparent; cursor: pointer; white-space: nowrap; transition: all 0.2s ease;
+  }
+  .filter-tab:hover { border-color: var(--amber); color: var(--text); }
+  .filter-tab.active { background: var(--amber); border-color: var(--amber); color: #1C1300; font-weight: 600; }
+  .filter-tab[data-filter="live"].active { background: var(--mint); border-color: var(--mint); color: #06251D; }
+  .filter-tab[data-filter="wip"].active { background: var(--amber); border-color: var(--amber); color: #1C1300; }
+  .filter-tab[data-filter="idea"].active { background: var(--sky); border-color: var(--sky); color: #07212F; }
+  .filter-tab[data-filter="iran"].active { background: var(--coral); border-color: var(--coral); color: #2A0D04; }
+  .filter-tab[data-filter="global"].active { background: var(--lavender); border-color: var(--lavender); color: #1C1233; }
+
+  .ideas-list { display: flex; flex-direction: column; gap: 14px; }
+
+  /* ── boarding-pass idea card ── */
+  .idea-card {
+    --status-color: var(--sky);
+    display: flex;
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .idea-card[data-status="live"] { --status-color: var(--mint); }
+  .idea-card[data-status="wip"]  { --status-color: var(--amber); }
+  .idea-card[data-status="idea"] { --status-color: var(--sky); }
+
+  .idea-card:hover { border-color: var(--status-color); transform: translateY(-2px); box-shadow: 0 10px 28px -14px rgba(0,0,0,0.55); }
+  .idea-card.open { border-color: var(--status-color); }
+
+  .hero-role-card {
+    margin: 20px 0 22px;
+    display: inline-flex;
+    opacity: 0; animation: fade-up 0.55s ease forwards 0.25s;
+  }
+  .hero-role-inner {
+    border: 1px solid var(--line);
+    background: var(--ink-2);
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex; flex-direction: column; gap: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-role-inner::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: linear-gradient(180deg, var(--amber), var(--coral));
+    border-radius: 3px 0 0 3px;
+  }
+  .hero-role-label {
+    font-size: 9px; letter-spacing: 2.5px; color: var(--amber); text-transform: uppercase;
+  }
+  .hero-role-title {
+    font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3;
+  }
+  .hero-role-title-fa {
+    font-size: 13px; font-weight: 500; color: var(--muted); line-height: 1.4;
+  }
+  .hero-role-company {
+    font-size: 10.5px; color: var(--muted); letter-spacing: 0.5px;
+  }
+
+  .amadeus-badge {
+    color: var(--amber);
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  /* ───────────────────── AMADEUS TEAM BANNER ───────────────────── */
+  .amadeus-team-banner {
+    margin: 26px 0 0;
+    opacity: 0; animation: fade-up 0.6s ease forwards 0.45s;
+  }
+  .amadeus-team-inner {
+    display: flex; align-items: center; gap: 14px;
+    background: linear-gradient(135deg, rgba(255,182,39,0.08) 0%, rgba(255,107,74,0.06) 100%);
+    border: 1px solid rgba(255,182,39,0.35);
+    border-radius: 14px;
+    padding: 14px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .amadeus-team-inner::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+    background: linear-gradient(180deg, var(--amber) 0%, var(--coral) 100%);
+    border-radius: 4px 0 0 4px;
+  }
+  .amadeus-team-inner::after {
+    content: 'AMADEUS';
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 52px; font-weight: 700; letter-spacing: 8px;
+    color: rgba(255,182,39,0.04);
+    pointer-events: none; white-space: nowrap;
+  }
+  .amadeus-logo-mark {
+    width: 38px; height: 38px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--amber), var(--coral));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; font-weight: 700; color: #1C1300;
+    box-shadow: 0 4px 14px rgba(255,182,39,0.3);
+    position: relative; z-index: 1;
+  }
+  .amadeus-team-text { flex: 1; position: relative; z-index: 1; }
+  .amadeus-team-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 2.5px; color: var(--amber);
+    text-transform: uppercase; margin-bottom: 3px;
+  }
+  .amadeus-team-title {
+    font-size: 14.5px; font-weight: 700; color: var(--text); line-height: 1.3;
+  }
+  .amadeus-team-subtitle {
+    font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.5;
+  }
+  .amadeus-team-pill {
+    flex-shrink: 0; position: relative; z-index: 1;
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(255,182,39,0.12);
+    border: 1px solid rgba(255,182,39,0.3);
+    border-radius: 100px;
+    padding: 5px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; font-weight: 600; color: var(--amber);
+    letter-spacing: 0.5px;
+  }
+  .amadeus-team-pill-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--mint);
+    animation: blink 1.4s ease infinite;
+  }
+  .desc-en {
+    display: block;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted);
+    direction: ltr; text-align: left; line-height: 1.75;
+    border-top: 1px solid var(--line-soft); padding-top: 10px;
+  }
+
+
+    flex: 0 0 42px;
+    background: color-mix(in srgb, var(--status-color) 14%, var(--ink-3));
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    position: relative;
+    border-inline-end: 1px dashed var(--line);
+  }
+  .idea-stub::before, .idea-stub::after {
+    content: ""; position: absolute; inset-inline-end: -7px; width: 14px; height: 14px;
+    background: var(--ink); border-radius: 50%;
+  }
+  .idea-stub::before { top: -7px; }
+  .idea-stub::after { bottom: -7px; }
+  .stub-code {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600;
+    color: var(--status-color); writing-mode: vertical-rl; text-orientation: mixed;
+    letter-spacing: 1px;
+  }
+  .stub-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--status-color); flex-shrink: 0; }
+  .stub-dot.pulse { animation: blink 1.2s ease infinite; }
+
+  .idea-main { flex: 1; min-width: 0; }
+  .idea-header { padding: 16px 16px 16px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
+  .idea-meta { flex: 1; min-width: 0; }
+  .idea-title { font-size: 15px; font-weight: 700; line-height: 1.35; margin-bottom: 5px; }
+  .idea-title-en { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--muted); }
+  .idea-badges { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.5px;
+    padding: 3px 9px; border-radius: 100px; font-weight: 600; text-transform: uppercase;
+  }
+  .badge-dot { width: 5px; height: 5px; border-radius: 50%; display: inline-block; }
+  .badge-live { background: rgba(70,224,184,0.12); color: var(--mint); }
+  .badge-live .badge-dot { background: var(--mint); }
+  .badge-wip { background: rgba(255,182,39,0.12); color: var(--amber); }
+  .badge-wip .badge-dot { background: var(--amber); animation: blink 1s ease infinite; }
+  .badge-idea { background: rgba(111,200,255,0.12); color: var(--sky); }
+  .badge-idea .badge-dot { background: var(--sky); }
+  .badge-iran { background: rgba(255,107,74,0.12); color: var(--coral); }
+  .badge-global { background: rgba(185,166,255,0.12); color: var(--lavender); }
+
+  .idea-toggle {
+    width: 30px; height: 30px; border-radius: 50%;
+    border: 1px solid var(--line); display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.3s ease; color: var(--muted);
+  }
+  .idea-card.open .idea-toggle { background: var(--status-color); border-color: var(--status-color); color: #0A1A22; transform: rotate(45deg); }
+  .idea-toggle svg { width: 14px; height: 14px; }
+
+  .idea-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.16,1,0.3,1); }
+  .idea-body.open { grid-template-rows: 1fr; }
+  .idea-body-inner { overflow: hidden; min-height: 0; padding: 0 16px 0 14px; }
+  .idea-body.open .idea-body-inner { padding-bottom: 20px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
+  .idea-body-text { font-size: 13.5px; line-height: 1.85; color: rgba(236,231,220,0.82); margin-bottom: 13px; }
+  .idea-body-en {
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--muted); line-height: 1.7;
+    padding-top: 12px; border-top: 1px solid var(--line-soft); direction: ltr; text-align: left;
+  }
+
+  /* ───────────────────── CAREER STRIP ───────────────────── */
+  .career-strip {
+    padding: 0 20px 32px;
+  }
+  .career-strip-inner {
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px 20px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .career-strip-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 2.5px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .career-strip-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--line);
+  }
+
+  /* horizontal track */
+  .career-track {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    position: relative;
+  }
+
+  /* stop node */
+  .career-stop {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    flex-shrink: 0;
+    opacity: 0; transform: translateY(8px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .career-stop.vis { opacity: 1; transform: translateY(0); }
+
+  .career-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    border: 1.5px solid transparent;
+    flex-shrink: 0;
+  }
+  .ci-iq {
+    background: rgba(0,130,220,0.12);
+    border-color: rgba(0,130,220,0.3);
+    color: #6FC8FF;
+  }
+  .ci-tk {
+    background: rgba(210,30,45,0.12);
+    border-color: rgba(210,30,45,0.3);
+    color: #FF8095;
+  }
+  .ci-am {
+    background: rgba(255,182,39,0.14);
+    border-color: rgba(255,182,39,0.45);
+    color: var(--amber);
+    box-shadow: 0 0 14px rgba(255,182,39,0.2);
+    position: relative;
+  }
+  .ci-am::after {
+    content: '';
+    position: absolute; inset: -5px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,182,39,0.25);
+    animation: pulse-ring 2s ease infinite;
+  }
+
+  .career-name {
+    font-size: 10px; font-weight: 700;
+    text-align: center; line-height: 1.3;
+    white-space: nowrap;
+  }
+  .career-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5px; color: var(--muted);
+    text-align: center;
+  }
+
+  /* connector line with animated plane */
+  .career-connector {
+    flex: 1;
+    position: relative;
+    height: 2px;
+    margin: 0 4px;
+    margin-bottom: 28px; /* align with icon center */
+    background: var(--line);
+    overflow: visible;
+  }
+  .career-connector::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(255,182,39,0) 0%, rgba(255,182,39,0.4) 100%);
+    border-radius: 2px;
+  }
+  /* travelling plane on connector */
+  .conn-plane {
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    font-size: 12px;
+    filter: drop-shadow(0 0 4px rgba(255,182,39,0.8));
+    animation: fly-right 2.2s ease-in-out infinite;
+    opacity: 0;
+    direction: ltr;
+  }
+  .conn-plane.go { opacity: 1; }
+  .career-connector:nth-of-type(1) .conn-plane { animation-delay: 0s; }
+  .career-connector:nth-of-type(2) .conn-plane { animation-delay: 1.1s; }
+
+  @keyframes fly-right {
+    0%   { left: 0%;   opacity: 0; }
+    8%   { opacity: 1; }
+    88%  { opacity: 1; }
+    100% { left: 100%; opacity: 0; }
+  }
+  @keyframes pulse-ring {
+    0%   { transform: scale(1);   opacity: 0.7; }
+    70%  { transform: scale(1.18); opacity: 0; }
+    100% { transform: scale(1.18); opacity: 0; }
+  }
+
+  @media (min-width: 760px) {
+    .career-strip { padding-left: 0; padding-right: 0; }
+    .career-strip .wrap { padding: 0 24px; }
+  }
+
+  /* ───────────────────── FOOTER ───────────────────── */
+  footer { padding: 50px 24px 40px; text-align: center; }
+  .stamp {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 2px solid var(--amber); border-radius: 8px;
+    padding: 8px 16px; transform: rotate(-3deg);
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px;
+    color: var(--amber); text-transform: uppercase; margin-bottom: 18px;
+    opacity: 0.85;
+  }
+  .footer-line { font-size: 11px; color: var(--muted); }
+  .footer-accent { color: var(--coral); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+  }
+
+  /* ───────────────────── DESKTOP ───────────────────── */
+  @media (min-width: 760px) {
+    .hero, .ideas-section { padding-left: 0; padding-right: 0; }
+    .hero { padding: 120px 0 50px; }
+    .hero .wrap, .ideas-section .wrap { padding: 0 24px; }
+    .ideas-list { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">✦ IDEAS</div>
+  <div class="nav-right">
+    <span class="nav-role">SOFTWARE ENGINEER · AMADEUS IT GROUP</span>
+    <span class="barcode"></span>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+
+    <span class="hero-eyebrow mono"><span class="status-dot-live status-dot-pulse"></span>عضو تیم آمادئوس &nbsp;·&nbsp; AMADEUS IT GROUP TEAM</span>
+
+    <h1 class="hero-title">
+      <div class="line"><span>سلام، من پیمانم<span class="accent">.</span></span></div>
+    </h1>
+
+    <div class="hero-role-card">
+      <div class="hero-role-inner">
+        <div class="hero-role-label mono">CURRENT ROLE · AMADEUS IT GROUP</div>
+        <div class="hero-role-title">Travel Tech Engineer & Product Strategist</div>
+        <div class="hero-role-title-fa">معمار راه‌حل‌های فناوری سفر و رزرو بلیط</div>
+        <div class="hero-role-company mono">
+          <span class="amadeus-badge">✦ AMADEUS TEAM MEMBER</span>
+          &nbsp;·&nbsp; Madrid / Remote
+        </div>
+      </div>
+    </div>
+
+    <p class="hero-desc">
+      <span class="desc-fa">این‌جا ایده‌های استارتاپیِ گردشگری که بهشون فکر کرده‌م رو می‌نویسم — بعضی ساخته شدن، بعضی هنوز توی ذهنمن.</span>
+      <span class="desc-en">A living log of travel-tech startup ideas I've been building on the side — some shipped, some still in my head.</span>
+    </p>
+
+    <div class="amadeus-team-banner">
+      <div class="amadeus-team-inner">
+        <div class="amadeus-logo-mark">A✦</div>
+        <div class="amadeus-team-text">
+          <div class="amadeus-team-label">Team Membership · عضویت تیمی</div>
+          <div class="amadeus-team-title">عضو رسمی تیم آمادئوس</div>
+          <div class="amadeus-team-subtitle">Amadeus IT Group &nbsp;·&nbsp; Travel Tech Division &nbsp;·&nbsp; Madrid / Remote</div>
+        </div>
+        <div class="amadeus-team-pill">
+          <span class="amadeus-team-pill-dot"></span>
+          TEAM MEMBER
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="ideas-section">
+  <div class="wrap">
+    <div class="section-header">
+      <div class="section-eyebrow">ایده‌ها · Ideas</div>
+      <h2 class="section-title">روی هر ایده کلیک کن بیشتر بخون</h2>
+    </div>
+
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all" onclick="filterIdeas('all', this)">همه</button>
+      <button class="filter-tab" data-filter="live" onclick="filterIdeas('live', this)">اجرا شده ✓</button>
+      <button class="filter-tab" data-filter="wip" onclick="filterIdeas('wip', this)">در حال اجرا</button>
+      <button class="filter-tab" data-filter="idea" onclick="filterIdeas('idea', this)">ایده‌پردازی</button>
+      <button class="filter-tab" data-filter="iran" onclick="filterIdeas('iran', this)">ایران</button>
+      <button class="filter-tab" data-filter="global" onclick="filterIdeas('global', this)">جهانی</button>
+    </div>
+
+    <div class="ideas-list" id="ideas-list">
+
+      <div class="idea-card" data-status="wip" data-geo="iran">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·01</span><span class="stub-dot pulse"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">دستیار هوشمند برنامه‌ریزی سفر</div>
+              <div class="idea-title-en">AI Travel Planner for Persian Speakers</div>
+              <div class="idea-badges">
+                <span class="badge badge-wip"><span class="badge-dot"></span>در حال اجرا</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </div>
+          </div>
+          <div class="idea-body">
+            <div class="idea-body-inner">
+              <p class="idea-body-text">یه چت‌بات فارسی که با استفاده از Amadeus API و مدل‌های زبانی بزرگ، برنامه سفر شخصی‌سازی‌شده میده. کاربر بگه «یه هفته اروپا با بودجه متوسط» — سیستم بلیط، هتل، و اکتیویتی رو پیشنهاد میده.</p>
+              <p class="idea-body-en">A Persian-language AI travel assistant leveraging Amadeus APIs + LLMs. User inputs trip intent in natural language; system returns full itinerary with flights, hotels, and activities. Core stack: Python, FastAPI, Claude/GPT, Amadeus Travel SDK.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="iran">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·02</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">پلتفرم بورس سفر ایرانی‌ها</div>
+              <div class="idea-title-en">Iranian Traveler Exchange Platform</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </div>
+          </div>
+          <div class="idea-body">
+            <div class="idea-body-inner">
+              <p class="idea-body-text">مارکت‌پلیسی که مسافرین ایرانی بتونن بلیط، هتل، یا تور نیمه‌کاره‌شون رو به هم بفروشن. مثل دیوار برای سفر — با سیستم اعتبارسنجی و پرداخت امن داخلی.</p>
+              <p class="idea-body-en">A peer-to-peer travel exchange where Iranian travelers can resell unused bookings — flights, hotels, tour packages — to other users. Think "Viagogo for Iranian travel" with verified listings and escrow-style payments.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="live" data-geo="global">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·03</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">مقایسه قیمت پرواز با NDC</div>
+              <div class="idea-title-en">NDC-Based Flight Price Aggregator</div>
+              <div class="idea-badges">
+                <span class="badge badge-live"><span class="badge-dot"></span>اجرا شده</span>
+                <span class="badge badge-global">جهانی</span>
+              </div>
+            </div>
+            <div class="idea-toggle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </div>
+          </div>
+          <div class="idea-body">
+            <div class="idea-body-inner">
+              <p class="idea-body-text">موتور جستجوی پرواز که از NDC مستقیماً با ایرلاین‌ها ارتباط میگیره و قیمت‌های اکسکلوسیو نشون میده که در GDS سنتی نیستن. نمونه‌های مشابه: Dohop، Kiwi.com</p>
+              <p class="idea-body-en">A flight search engine using IATA NDC standard to connect directly with airlines, surfacing exclusive fares unavailable in traditional GDS channels. This model is live globally — companies like Dohop and Kiwi already operate here. The opportunity: build for underserved markets.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="iran">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·04</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">سیستم مدیریت تجربه گردشگر</div>
+              <div class="idea-title-en">Tourist Experience Management System</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </div>
+          </div>
+          <div class="idea-body">
+            <div class="idea-body-inner">
+              <p class="idea-body-text">یه SaaS برای هتل‌ها و اقامتگاه‌های ایرانی که بتونن چرخه کامل مهمان رو مدیریت کنن: pre-arrival، check-in دیجیتال، در طول اقامت، و post-stay. با داشبورد تحلیل رضایت.</p>
+              <p class="idea-body-en">SaaS platform for Iranian hotels and boutique stays: digital pre-arrival communication, contactless check-in, in-stay service requests via QR, and automated post-stay NPS collection. Stack: Python Django + React + WhatsApp Business API.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="wip" data-geo="global">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·05</span><span class="stub-dot pulse"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">داده‌کاوی الگوهای سفر ایرانیان خارج</div>
+              <div class="idea-title-en">Diaspora Travel Pattern Analytics</div>
+              <div class="idea-badges">
+                <span class="badge badge-wip"><span class="badge-dot"></span>در حال اجرا</span>
+                <span class="badge badge-global">جهانی</span>
+              </div>
+            </div>
+            <div class="idea-toggle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </div>
+          </div>
+          <div class="idea-body">
+            <div class="idea-body-inner">
+              <p class="idea-body-text">تحلیل داده سفر ایرانیان مقیم خارج برای شناخت الگوهای بازگشت، مقصدهای محبوب، و فصل‌های پیک. این داده می‌تونه به ایرلاین‌ها و آژانس‌ها برای قیمت‌گذاری هدفمند کمک کنه.</p>
+              <p class="idea-body-en">Mining anonymized booking and search data to map travel behaviors of the Iranian diaspora (3M+ in US/EU/Canada). Key insights: reunion travel patterns, optimal route bundling, price sensitivity curves. Built in Python: pandas, scikit-learn, Amadeus Analytics APIs.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="iran">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·06</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">اینجا ایده تو میاد</div>
+              <div class="idea-title-en">Your next idea goes here</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>به زودی</span>
+              </div>
+            </div>
+            <div class="idea-toggle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </div>
+          </div>
+          <div class="idea-body">
+            <div class="idea-body-inner">
+              <p class="idea-body-text">این کارت یه placeholder هست. هر ایده جدیدی که داری می‌تونی اضافه کنی. طراحی برای اسکیل کردن ساخته شده — فقط یه کارت جدید اضافه کن.</p>
+              <p class="idea-body-en">Placeholder for your next idea. The design is built to scale — just duplicate a card block and update the content. No frameworks, no build tools, pure HTML/CSS/JS.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="career-section">
+  <div class="wrap">
+    <div class="section-header">
+      <div class="section-eyebrow">مسیر شغلی · Career Path</div>
+      <h2 class="section-title">از عراقی ایرلاینز تا آمادئوس</h2>
+    </div>
+
+    <div class="timeline-track" id="timeline-track">
+
+      <!-- ✈ Iraqi Airways -->
+      <div class="timeline-item" data-delay="0">
+        <div style="position:relative; width:40px; flex-shrink:0;">
+          <div class="timeline-node node-iraqi">🇮🇶</div>
+        </div>
+        <div class="timeline-content">
+          <span class="timeline-year">· · · · آغاز مسیر</span>
+          <div class="timeline-company">هواپیمایی العراقیه</div>
+          <span class="timeline-company-en">IRAQI AIRWAYS · Baghdad Hub</span>
+          <div class="timeline-role">اولین قدم در صنعت هوانوردی — آشنایی با عملیات پرواز، سیستم‌های رزرو، و زیرساخت ایرلاین‌ها در خاورمیانه.</div>
+          <div class="timeline-route">
+            <span class="route-city">BGW</span>
+            <span class="route-arrow">──✈</span>
+            <span>Baghdad · Middle East Aviation</span>
+          </div>
+          <span class="timeline-tag tag-iraqi"><span class="tag-dot"></span>Aviation Ops</span>
+        </div>
+      </div>
+
+      <!-- plane between 1→2 -->
+      <div style="position:relative; height:36px; margin-right:10px;">
+        <div style="position:absolute; right:9px; top:0; bottom:0; width:2px; background:var(--line);"></div>
+        <div class="plane-anim" id="plane1" style="animation-delay:0s;">✈</div>
+      </div>
+
+      <!-- ✈ Turkish Airlines -->
+      <div class="timeline-item" data-delay="200">
+        <div style="position:relative; width:40px; flex-shrink:0;">
+          <div class="timeline-node node-turkish">🇹🇷</div>
+        </div>
+        <div class="timeline-content">
+          <span class="timeline-year">· · · · گام دوم</span>
+          <div class="timeline-company">ترکیش ایرلاین</div>
+          <span class="timeline-company-en">TURKISH AIRLINES · Istanbul Hub</span>
+          <div class="timeline-role">ارتقا به یکی از بزرگترین ایرلاین‌های جهان — کار با شبکه پروازی گسترده، GDS بین‌المللی، و تیم‌های چندملیتی در استانبول.</div>
+          <div class="timeline-route">
+            <span class="route-city">IST</span>
+            <span class="route-arrow">──✈</span>
+            <span>Istanbul · Global Network</span>
+          </div>
+          <span class="timeline-tag tag-turkish"><span class="tag-dot"></span>Global Airline Ops</span>
+        </div>
+      </div>
+
+      <!-- plane between 2→3 -->
+      <div style="position:relative; height:36px; margin-right:10px;">
+        <div style="position:absolute; right:9px; top:0; bottom:0; width:2px; background:var(--line);"></div>
+        <div class="plane-anim" id="plane2" style="animation-delay:1.25s;">✈</div>
+      </div>
+
+      <!-- ✈ Amadeus -->
+      <div class="timeline-item" data-delay="400">
+        <div style="position:relative; width:40px; flex-shrink:0;">
+          <div class="timeline-node node-amadeus">✦</div>
+        </div>
+        <div class="timeline-content">
+          <span class="timeline-year">· · · · اکنون · NOW</span>
+          <div class="timeline-company" style="color:var(--amber);">آمادئوس</div>
+          <span class="timeline-company-en">AMADEUS IT GROUP · Madrid / Remote</span>
+          <div class="timeline-role">ورود به قلب تکنولوژی صنعت سفر جهانی — تیم آمادئوس، پشتیبان سیستم‌های رزرو بیش از ۱.۸ میلیارد مسافر در سال.</div>
+          <div class="timeline-route">
+            <span class="route-city">MAD</span>
+            <span class="route-arrow">──✦</span>
+            <span>Madrid · Travel Tech HQ</span>
+          </div>
+          <span class="timeline-tag tag-amadeus"><span class="tag-dot"></span>Team Member · آمادئوس</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="stamp">✦ AMADEUS ✦ TRAVEL TECH ✦</div>
+  <div class="footer-line">Travel Tech &amp; Ideas · Python · <span class="footer-accent">گردشگری</span></div>
+</footer>
+
+<script>
+  function toggleCard(card) {
+    const body = card.querySelector('.idea-body');
+    const isOpen = card.classList.contains('open');
+    document.querySelectorAll('.idea-card').forEach(c => {
+      c.classList.remove('open');
+      c.querySelector('.idea-body').classList.remove('open');
+    });
+    if (!isOpen) {
+      card.classList.add('open');
+      body.classList.add('open');
+    }
+  }
+
+  function filterIdeas(filter, btn) {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+
+    document.querySelectorAll('.idea-card').forEach(card => {
+      const status = card.dataset.status;
+      const geo = card.dataset.geo;
+      let show = true;
+      if (filter === 'live') show = status === 'live';
+      else if (filter === 'wip') show = status === 'wip';
+      else if (filter === 'idea') show = status === 'idea';
+      else if (filter === 'iran') show = geo === 'iran';
+      else if (filter === 'global') show = geo === 'global';
+
+      card.style.display = show ? '' : 'none';
+      card.classList.remove('open');
+      card.querySelector('.idea-body').classList.remove('open');
+    });
+  }
+
+  /* ── Timeline scroll-reveal ── */
+  const timelineItems = document.querySelectorAll('.timeline-item');
+  const planes = document.querySelectorAll('.plane-anim');
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const delay = parseInt(entry.target.dataset.delay || 0);
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, delay);
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  timelineItems.forEach(item => revealObserver.observe(item));
+
+  /* activate plane animations when timeline section enters viewport */
+  const trackObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        planes.forEach(p => p.classList.add('active'));
+      } else {
+        planes.forEach(p => p.classList.remove('active'));
+      }
+    });
+  }, { threshold: 0.1 });
+
+  const track = document.getElementById('timeline-track');
+  if (track) trackObserver.observe(track);
+</script>
+</body>
+</html>
