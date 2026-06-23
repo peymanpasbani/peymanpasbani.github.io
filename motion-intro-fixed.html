@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>پیمان · موشن معرفی</title>
+<link href="https://fonts.bunny.net/css?family=vazirmatn:300,400,500,700,900|lalezar:400|jetbrains-mono:400,600,700" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0A1A22;--ink2:#102832;--ink3:#163542;
+  --amber:#FFB627;--coral:#FF6B4A;--mint:#46E0B8;
+  --sky:#6FC8FF;--lav:#B9A6FF;
+  --text:#ECE7DC;--muted:#92ABB2;
+  --line:rgba(236,231,220,0.14);--lsoft:rgba(236,231,220,0.07);
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--text);font-family:'Vazirmatn',sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:'JetBrains Mono',monospace;direction:ltr;unicode-bidi:isolate}
+
+/* STAGE */
+#stage{width:100vw;height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+/* GRID */
+.grid-bg{position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(var(--lsoft) 1px,transparent 1px),linear-gradient(90deg,var(--lsoft) 1px,transparent 1px);
+  background-size:52px 52px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,black 30%,transparent 100%);
+  opacity:0;transition:opacity 1s}
+
+/* GLOWS */
+.glow{position:absolute;border-radius:50%;pointer-events:none;opacity:0;filter:blur(90px);transition:opacity 1.5s}
+.g-amber{width:600px;height:600px;top:-180px;right:-120px;background:radial-gradient(circle,rgba(255,182,39,0.12),transparent 70%)}
+.g-coral{width:400px;height:400px;bottom:-100px;left:-80px;background:radial-gradient(circle,rgba(255,107,74,0.09),transparent 70%)}
+.g-mint{width:450px;height:450px;bottom:-80px;right:-60px;background:radial-gradient(circle,rgba(70,224,184,0.1),transparent 70%);opacity:0}
+
+/* CINEMATIC BARS */
+.cbar{position:fixed;left:0;right:0;background:#000;z-index:50;pointer-events:none;transition:height .9s cubic-bezier(.16,1,.3,1)}
+.cbar-t{top:0;height:64px}.cbar-b{bottom:0;height:64px}
+.cbar.slim{height:0}
+
+/* CURTAIN */
+#curtain{position:fixed;inset:0;z-index:200;background:var(--ink);opacity:1;pointer-events:none;transition:opacity .4s ease}
+#curtain.gone{opacity:0}
+
+/* SCENES */
+.sc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;padding:80px 24px}
+.sc.on{pointer-events:auto}
+
+/* PROGRESS DOTS */
+#pdots{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:100;opacity:0;transition:opacity .5s .8s}
+#pdots.show{opacity:1}
+.pd{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,0.18);transition:width .35s,background .35s}
+.pd.on{width:22px;background:var(--amber)}
+
+/* TIMESTAMP */
+#ts{position:fixed;bottom:70px;right:20px;font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(146,171,178,0.45);letter-spacing:1px;direction:ltr;z-index:100;opacity:0;transition:opacity .5s 1s}
+#ts.show{opacity:1}
+
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{to{opacity:1;transform:translateY(0)}}
+@keyframes scrollPulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ══ SCENE 1 — HERO ══ */
+#s1 .terminal{display:inline-flex;align-items:center;gap:8px;background:rgba(70,224,184,.07);border:1px solid rgba(70,224,184,.2);border-radius:6px;padding:6px 14px;margin-bottom:40px;opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .5s ease}
+#s1 .term-txt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mint);direction:ltr}
+#s1 .term-txt::before{content:'▶ ';font-size:8px;opacity:.7}
+#s1 .cursor{display:inline-block;width:7px;height:14px;background:var(--mint);border-radius:1px;animation:blink 1s step-end infinite;vertical-align:middle;margin-right:3px}
+#s1 .name-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;opacity:0;transform:translateY(12px);transition:opacity .4s ease,transform .4s ease}
+#s1 .big-name{font-family:'Lalezar',sans-serif;font-size:clamp(72px,17vw,140px);line-height:.88;letter-spacing:2px;color:var(--text);overflow:hidden}
+#s1 .bn-line{display:block;overflow:hidden}
+#s1 .bn-line span{display:block;opacity:0;transform:translateY(100%);transition:opacity .75s cubic-bezier(.16,1,.3,1),transform .75s cubic-bezier(.16,1,.3,1)}
+#s1 .name-en{font-family:'JetBrains Mono',monospace;font-size:clamp(10px,2vw,14px);letter-spacing:6px;color:var(--amber);text-transform:uppercase;direction:ltr;margin-top:16px;opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .5s ease}
+#s1 .role-strip{display:flex;margin-top:40px;border:1px solid var(--line);border-radius:10px;background:var(--ink2);overflow:hidden;opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .5s ease;width:min(660px,90vw)}
+#s1 .cell{flex:1;padding:13px 16px;border-inline-end:1px solid var(--line)}
+#s1 .cell:last-child{border-inline-end:none}
+#s1 .cl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2.5px;color:var(--muted);text-transform:uppercase;margin-bottom:5px}
+#s1 .cv{font-size:12.5px;font-weight:700;line-height:1.3}
+#s1 .cv.amber{color:var(--amber)}
+#s1 .cv.mint{color:var(--mint);display:flex;align-items:center;gap:5px}
+#s1 .ldot{width:6px;height:6px;border-radius:50%;background:var(--mint);flex-shrink:0;animation:blink 1.3s ease infinite}
+#s1 .scroll-hint{position:absolute;bottom:32px;left:50%;transform:translateX(-50%) translateY(12px);display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0;transition:opacity .5s ease,transform .5s ease}
+#s1 .sh-line{width:1px;height:32px;background:linear-gradient(180deg,var(--amber),transparent);animation:scrollPulse 2s ease infinite}
+#s1 .sh-lbl{font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
+
+/* ══ SCENE 2 — IDEAS BOARD ══ */
+#s2 .board{width:min(680px,90vw)}
+#s2 .s-eyebrow{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--coral);text-transform:uppercase;margin-bottom:8px;opacity:0;transform:translateY(10px)}
+#s2 .s-title{font-size:clamp(18px,3.5vw,26px);font-weight:700;margin-bottom:22px;opacity:0;transform:translateY(10px)}
+#s2 .ftabs{display:flex;gap:7px;margin-bottom:20px;opacity:0;transform:translateY(10px)}
+#s2 .ft{font-family:'JetBrains Mono',monospace;font-size:10px;padding:6px 13px;border-radius:100px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+#s2 .ft.fa{background:var(--amber);border-color:var(--amber);color:#1C1300;font-weight:700}
+#s2 .ft.fm{background:var(--mint);border-color:var(--mint);color:#06251D;font-weight:700}
+#s2 .ft.fk{background:var(--sky);border-color:var(--sky);color:#07212F;font-weight:700}
+
+.mc-list{display:flex;flex-direction:column;gap:9px}
+.mc{background:var(--ink2);border:1px solid var(--line);border-radius:9px;display:flex;align-items:center;gap:12px;padding:13px 16px;opacity:0;transform:translateX(28px);transition:border-color .3s,background .3s}
+.mc.in{opacity:1;transform:translateX(0)}
+.mc.hi{border-color:rgba(255,182,39,.5);background:rgba(255,182,39,.05)}
+.mc-code{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--muted);white-space:nowrap;flex-shrink:0}
+.mc-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.mc-title{font-size:12.5px;font-weight:600;flex:1;line-height:1.3}
+.mc-badge{font-family:'JetBrains Mono',monospace;font-size:8.5px;padding:3px 9px;border-radius:100px;flex-shrink:0}
+.mc-wip .mc-dot{background:var(--amber)}
+.mc-wip .mc-badge{background:rgba(255,182,39,.15);border:1px solid rgba(255,182,39,.35);color:var(--amber)}
+.mc-live .mc-dot{background:var(--mint);animation:blink 1.3s ease infinite}
+.mc-live .mc-badge{background:rgba(70,224,184,.12);border:1px solid rgba(70,224,184,.3);color:var(--mint)}
+.mc-idea .mc-dot{background:var(--sky)}
+.mc-idea .mc-badge{background:rgba(111,200,255,.1);border:1px solid rgba(111,200,255,.3);color:var(--sky)}
+
+/* ══ SCENE 3 — CARD OPEN ══ */
+#s3 .cw{width:min(680px,90vw)}
+#s3 .bcard{background:var(--ink2);border:1px solid var(--line);border-radius:12px;overflow:hidden;opacity:0;transform:translateY(18px);transition:opacity .5s,transform .5s,border-color .4s}
+#s3 .bcard.in{opacity:1;transform:translateY(0)}
+#s3 .bcard.open-state{border-color:rgba(70,224,184,.4)}
+#s3 .ch{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+#s3 .c-stub{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--muted);background:rgba(255,255,255,.05);padding:3px 9px;border-radius:4px;flex-shrink:0}
+#s3 .c-dot{width:7px;height:7px;border-radius:50%;background:var(--mint);animation:blink 1.3s ease infinite;flex-shrink:0}
+#s3 .c-title{font-size:14px;font-weight:700;flex:1;line-height:1.3}
+#s3 .c-badges{display:flex;gap:6px;flex-shrink:0}
+#s3 .cb{font-family:'JetBrains Mono',monospace;font-size:8.5px;padding:3px 9px;border-radius:100px}
+#s3 .cb-wip{background:rgba(255,182,39,.15);border:1px solid rgba(255,182,39,.35);color:var(--amber)}
+#s3 .cb-ir{background:rgba(255,107,74,.12);border:1px solid rgba(255,107,74,.3);color:var(--coral)}
+#s3 .tog{width:27px;height:27px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--muted);flex-shrink:0;transition:transform .4s,background .3s,border-color .3s,color .3s}
+#s3 .tog.open{transform:rotate(45deg);background:var(--mint);border-color:var(--mint);color:#06251D}
+#s3 .cbody{max-height:0;overflow:hidden;transition:max-height .75s cubic-bezier(.16,1,.3,1)}
+#s3 .cbody.open{max-height:260px}
+#s3 .cbi{padding:18px 20px;border-top:1px solid var(--line)}
+#s3 .ctxt{font-size:13px;color:var(--muted);line-height:1.85;border-right:2px solid rgba(70,224,184,.3);padding-right:14px}
+#s3 .ctxt .hi{color:var(--text);font-weight:600}
+#s3 .ctxt .a{color:var(--amber);font-weight:700}
+#s3 .ctxt .m{color:var(--mint);font-weight:700}
+
+/* after close — show 2 more cards beneath */
+#s3 .after-cards{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+#s3 .sm-card{background:var(--ink2);border:1px solid var(--line);border-radius:9px;display:flex;align-items:center;gap:10px;padding:11px 14px;opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s}
+#s3 .sm-card.in{opacity:1;transform:translateY(0)}
+#s3 .sm-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+#s3 .sm-code{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--muted);flex-shrink:0}
+#s3 .sm-title{font-size:12px;font-weight:600;flex:1}
+
+/* ══ SCENE 4 — CAREER ══ */
+#s4 .ctrack{width:min(680px,90vw)}
+#s4 .s-eyebrow{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--coral);text-transform:uppercase;margin-bottom:8px;opacity:0;transform:translateY(10px)}
+#s4 .s-title{font-size:clamp(18px,3.5vw,26px);font-weight:700;margin-bottom:28px;opacity:0;transform:translateY(10px)}
+#s4 .flights{display:flex;flex-direction:column;gap:0}
+.flight{display:flex;gap:14px;opacity:0;transform:translateX(20px);transition:opacity .5s,transform .5s}
+.flight.in{opacity:1;transform:translateX(0)}
+.f-node{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:var(--ink3);border:1px solid var(--line);position:relative;z-index:1}
+.f-line-wrap{display:flex;flex-direction:column;align-items:center;width:40px;flex-shrink:0}
+.f-connector{width:1px;flex:1;min-height:16px;background:linear-gradient(180deg,var(--line),rgba(255,255,255,.04));margin-top:6px}
+.f-content{padding-bottom:20px;flex:1}
+.f-phase{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.f-company{font-size:15px;font-weight:700;margin-bottom:2px}
+.f-company.amber{color:var(--amber)}
+.f-company.gold{color:#FFD580}
+.f-company.star{color:var(--mint)}
+.f-en{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);margin-bottom:8px;direction:ltr}
+.f-route{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:6px;direction:ltr}
+.fr-code{color:var(--text);font-weight:700;font-size:11px}
+
+/* ══ SCENE 5 — END ══ */
+#s5 .et{font-family:'Lalezar',sans-serif;font-size:clamp(40px,10vw,88px);letter-spacing:1px;text-align:center;line-height:1;overflow:hidden}
+#s5 .et span{display:block;opacity:0;transform:translateY(100%);transition:opacity .85s cubic-bezier(.16,1,.3,1),transform .85s cubic-bezier(.16,1,.3,1)}
+#s5 .esub{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--muted);margin-top:20px;opacity:0;text-align:center;direction:ltr}
+#s5 .ebar{width:min(380px,80vw);height:2px;background:rgba(255,255,255,.07);border-radius:2px;margin-top:44px;overflow:hidden;opacity:0}
+#s5 .efill{height:100%;width:0%;background:linear-gradient(90deg,var(--amber),var(--coral));border-radius:2px;transition:width linear}
+#s5 .replay{margin-top:28px;padding:9px 26px;background:transparent;border:1px solid var(--line);border-radius:8px;color:var(--muted);font-family:'Vazirmatn',sans-serif;font-size:13px;cursor:pointer;opacity:0;transition:border-color .2s,color .2s}
+#s5 .replay:hover{border-color:var(--amber);color:var(--amber)}
+</style>
+</head>
+<body>
+<div id="curtain"></div>
+<div class="cbar cbar-t" id="bt"></div>
+<div class="cbar cbar-b" id="bb"></div>
+<div id="pdots"><div class="pd on" id="p0"></div><div class="pd" id="p1"></div><div class="pd" id="p2"></div><div class="pd" id="p3"></div><div class="pd" id="p4"></div></div>
+<div id="ts">00:00</div>
+
+<div id="stage">
+  <div class="grid-bg" id="gbg"></div>
+  <div class="glow g-amber" id="ga"></div>
+  <div class="glow g-coral" id="gc"></div>
+  <div class="glow g-mint" id="gm"></div>
+
+  <!-- S1: HERO -->
+  <div class="sc" id="s1">
+    <div class="terminal"><span class="term-txt">peymanpasbani.github.io</span><span class="cursor"></span></div>
+    <div class="name-label">PRODUCT BUILDER · TRAVEL TECH</div>
+    <div class="big-name">
+      <div class="bn-line"><span>سلام،</span></div>
+      <div class="bn-line"><span style="color:var(--amber)">پیمان</span></div>
+      <div class="bn-line"><span>هستم.</span></div>
+    </div>
+    <div class="name-en">PEYMAN PASBANI · AMADEUS IT GROUP</div>
+    <div class="role-strip">
+      <div class="cell"><div class="cl">ROLE</div><div class="cv amber">معمار فناوری سفر</div></div>
+      <div class="cell"><div class="cl">COMPANY</div><div class="cv">Amadeus IT Group</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);margin-top:2px">Madrid / Remote</div></div>
+      <div class="cell"><div class="cl">STATUS</div><div class="cv mint"><div class="ldot"></div>در حال ساختن</div></div>
+    </div>
+    <div class="scroll-hint"><div class="sh-line"></div><div class="sh-lbl">scroll</div></div>
+  </div>
+
+  <!-- S2: IDEAS -->
+  <div class="sc" id="s2">
+    <div class="board">
+      <div class="s-eyebrow" id="s2e">IDEA BOARD · ۳۵ ایده</div>
+      <div class="s-title" id="s2t">ایده‌هایم را اینجا می‌نویسم</div>
+      <div class="ftabs" id="s2f">
+        <div class="ft fa">همه</div>
+        <div class="ft fm">در حال اجرا</div>
+        <div class="ft fk">اجرا شده ✓</div>
+        <div class="ft">ایران</div>
+        <div class="ft">جهانی</div>
+      </div>
+      <div class="mc-list">
+        <div class="mc mc-wip" id="m0"><span class="mc-code">IDEA·00</span><div class="mc-dot"></div><div class="mc-title">آسمانه ✈ — حقوق مسافران هوایی ایران</div><div class="mc-badge">در حال اجرا</div></div>
+        <div class="mc mc-wip" id="m1"><span class="mc-code">IDEA·03</span><div class="mc-dot"></div><div class="mc-title">دستیار هوشمند برنامه‌ریزی سفر با AI</div><div class="mc-badge">در حال اجرا</div></div>
+        <div class="mc mc-live" id="m2"><span class="mc-code">IDEA·08</span><div class="mc-dot"></div><div class="mc-title">نرخ‌گذاری اتوماتیک بلیط با AI</div><div class="mc-badge">اجرا شده ✓</div></div>
+        <div class="mc mc-idea" id="m3"><span class="mc-code">IDEA·01</span><div class="mc-dot"></div><div class="mc-title">قیمت‌گذاری گروهی زنده برای تور</div><div class="mc-badge">ایده‌پردازی</div></div>
+        <div class="mc mc-wip" id="m4"><span class="mc-code">IDEA·32</span><div class="mc-dot"></div><div class="mc-title">سامانه رزرو هتل‌های نجف و کربلا</div><div class="mc-badge">در حال اجرا</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3: CARD OPEN/CLOSE -->
+  <div class="sc" id="s3">
+    <div class="cw">
+      <div class="bcard" id="bc">
+        <div class="ch">
+          <div class="c-stub">IDEA·00</div>
+          <div class="c-dot"></div>
+          <div class="c-title">آسمانه ✈ — سامانه استیفای حقوق مسافران هوایی ایران</div>
+          <div class="c-badges"><div class="cb cb-wip">در حال اجرا</div><div class="cb cb-ir">ایران</div></div>
+          <div class="tog" id="tog">+</div>
+        </div>
+        <div class="cbody" id="cbody">
+          <div class="cbi">
+            <p class="ctxt">هر ساله <span class="hi">میلیون‌ها مسافر ایرانی</span> از غرامت پرواز می‌گذرند — چون از حق قانونی خود بی‌خبرند. <span class="hi">آسمانه</span> اولین سامانه احقاق حقوق مسافران هوایی ایران است. تأخیر ۲–۵ ساعت: <span class="a">۳۰٪ قیمت بلیت</span> · بیش از ۵ ساعت: <span class="m">۱۰۰٪ قیمت بلیت</span>. مدل <span class="hi">بدون موفقیت، بدون هزینه</span> — الهام از AirHelp، ساخته شده برای ایران.</p>
+          </div>
+        </div>
+      </div>
+      <div class="after-cards" id="acards">
+        <div class="sm-card" id="ac1">
+          <div class="sm-dot" style="background:var(--mint);animation:blink 1.3s ease infinite"></div>
+          <span class="sm-code">IDEA·09</span>
+          <div class="sm-title">پیش‌بینی مرگ مسیر پروازی با AI</div>
+          <div class="mc-badge mc-live" style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:3px 9px;border-radius:100px;background:rgba(70,224,184,.12);border:1px solid rgba(70,224,184,.3);color:var(--mint)">اجرا شده</div>
+        </div>
+        <div class="sm-card" id="ac2">
+          <div class="sm-dot" style="background:var(--amber)"></div>
+          <span class="sm-code">IDEA·33</span>
+          <div class="sm-title">پلتفرم زیارت مدولار — بدون کاروان</div>
+          <div class="mc-badge" style="font-family:'JetBrains Mono',monospace;font-size:8px;padding:3px 9px;border-radius:100px;background:rgba(255,182,39,.15);border:1px solid rgba(255,182,39,.35);color:var(--amber)">در حال اجرا</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S4: CAREER -->
+  <div class="sc" id="s4">
+    <div class="ctrack">
+      <div class="s-eyebrow" id="s4e">مسیر شغلی · CAREER PATH</div>
+      <div class="s-title" id="s4t">از العراقیه و ترکیش ایر تا آمادئوس</div>
+      <div class="flights" id="flights">
+        <div class="flight" id="f0">
+          <div style="display:flex;flex-direction:column;align-items:center;width:40px;flex-shrink:0">
+            <div class="f-node">🇮🇶</div>
+            <div class="f-connector"></div>
+          </div>
+          <div class="f-content">
+            <div class="f-phase">آغاز مسیر · First Chapter</div>
+            <div class="f-company amber">هواپیمایی العراقیه</div>
+            <div class="f-en">IRAQI AIRWAYS · Baghdad</div>
+            <div class="f-route"><span class="fr-code">BGW</span><span>──✈──</span><span>Baghdad · Middle East Aviation</span></div>
+          </div>
+        </div>
+        <div class="flight" id="f1">
+          <div style="display:flex;flex-direction:column;align-items:center;width:40px;flex-shrink:0">
+            <div class="f-node">🇹🇷</div>
+            <div class="f-connector"></div>
+          </div>
+          <div class="f-content">
+            <div class="f-phase">گام دوم · Second Chapter</div>
+            <div class="f-company gold">ترکیش ایر</div>
+            <div class="f-en">TURKISH AIRLINES · Istanbul</div>
+            <div class="f-route"><span class="fr-code">IST</span><span>──✈──</span><span>Istanbul · Global Network</span></div>
+          </div>
+        </div>
+        <div class="flight" id="f2">
+          <div style="display:flex;flex-direction:column;align-items:center;width:40px;flex-shrink:0">
+            <div class="f-node" style="background:rgba(70,224,184,.12);border-color:rgba(70,224,184,.3)">✦</div>
+          </div>
+          <div class="f-content">
+            <div class="f-phase">اکنون · NOW</div>
+            <div class="f-company star">Amadeus IT Group</div>
+            <div class="f-en">AMADEUS · Madrid / Remote</div>
+            <div class="f-route"><span class="fr-code">MAD</span><span>──✦──</span><span>Madrid · Travel Tech HQ</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S5: END -->
+  <div class="sc" id="s5">
+    <div class="et" id="et"><span>ایده‌ها زنده‌اند.</span></div>
+    <div class="esub" id="esub">peymanpasbani.github.io · 35 IDEAS · BUILDING</div>
+    <div class="ebar" id="ebar"><div class="efill" id="efill"></div></div>
+    <button class="replay" id="rbtn" onclick="run()">↻ پخش مجدد</button>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id)
+const sleep=ms=>new Promise(r=>setTimeout(r,ms))
+const on=(el,...c)=>el.classList.add(...c)
+const off=(el,...c)=>el.classList.remove(...c)
+
+function setPD(n){for(let i=0;i<5;i++){const p=$(`p${i}`);p.classList.toggle('on',i===n)}}
+
+let tsi; let sec=0
+function startTS(){sec=0;clearInterval(tsi);tsi=setInterval(()=>{sec++;$('ts').textContent=`00:${String(sec%60).padStart(2,'0')}`},1000)}
+
+function showScene(id){document.querySelectorAll('.sc').forEach(s=>{s.style.opacity='0';off(s,'on')});const s=$(id);s.style.opacity='1';on(s,'on')}
+
+async function fadeOut(){off($('curtain'),'gone');await sleep(360)}
+async function fadeIn(){on($('curtain'),'gone');await sleep(360)}
+
+async function run(){
+  // reset UI
+  document.querySelectorAll('.sc').forEach(s=>{s.style.opacity='0';off(s,'on')})
+  $('curtain').style.transition='none';$('curtain').style.opacity='1';off($('curtain'),'gone')
+  off($('bt'),'slim');off($('bb'),'slim')
+  $('gbg').style.opacity='0';$('ga').style.opacity='0';$('gc').style.opacity='0';$('gm').style.opacity='0'
+  off($('pdots'),'show');off($('ts'),'show')
+  // reset s1 elements
+  const s1Els=['terminal','name-label','name-en','role-strip','scroll-hint'].map(c=>document.querySelector('#s1 .'+c))
+  s1Els.forEach(el=>{if(el){el.style.transition='none';el.style.opacity='0';el.style.transform=el.classList.contains('scroll-hint')?'translateX(-50%) translateY(12px)':'translateY(12px)'}})
+  document.querySelectorAll('#s1 .bn-line span').forEach(el=>{el.style.transition='none';el.style.opacity='0';el.style.transform='translateY(100%)'})
+  // reset s5
+  const sp=$('et').querySelector('span')
+  sp.style.transition='none';sp.style.opacity='0';sp.style.transform='translateY(100%)'
+  $('esub').style.opacity='0';$('ebar').style.opacity='0';$('efill').style.width='0%';$('rbtn').style.opacity='0'
+
+  await sleep(500)
+  // open bars
+  on($('bt'),'slim');on($('bb'),'slim')
+  $('gbg').style.transition='opacity 1.2s';$('gbg').style.opacity='1'
+  $('ga').style.transition='opacity 1.5s';$('ga').style.opacity='1'
+  $('gc').style.transition='opacity 1.5s';$('gc').style.opacity='0.7'
+  on($('pdots'),'show');on($('ts'),'show')
+  $('curtain').style.transition='opacity .4s ease'
+  startTS()
+
+  // ── S1: HERO (0–3.5s) ──
+  showScene('s1'); setPD(0)
+  await fadeIn()
+  // animate s1 elements in sequence
+  const ease1='opacity .5s ease,transform .5s ease'
+  const delays1=[['terminal',100],['name-label',150],['name-en',550],['role-strip',720],['scroll-hint',1100]]
+  delays1.forEach(([cls,delay])=>{
+    const el=document.querySelector('#s1 .'+cls)
+    if(el) setTimeout(()=>{el.style.transition=ease1;el.style.opacity='1';el.style.transform=cls==='scroll-hint'?'translateX(-50%) translateY(0)':'translateY(0)'},delay)
+  })
+  document.querySelectorAll('#s1 .bn-line span').forEach((el,i)=>{
+    setTimeout(()=>{el.style.transition='opacity .75s cubic-bezier(.16,1,.3,1),transform .75s cubic-bezier(.16,1,.3,1)';el.style.opacity='1';el.style.transform='translateY(0)'},220+i*80)
+  })
+  await sleep(2800)
+
+  // ── S2: IDEAS (3.5–8s) ──
+  await fadeOut(); showScene('s2'); setPD(1)
+  // reset
+  ;['s2e','s2t','s2f'].forEach(id=>{const el=$(id);el.style.opacity='0';el.style.transform='translateY(10px)';el.style.transition='none'})
+  ;['m0','m1','m2','m3','m4'].forEach(id=>{const el=$(id);el.style.opacity='0';el.style.transform='translateX(28px)';el.style.transition='none';off(el,'hi')})
+  await fadeIn()
+  const ease='opacity .45s ease,transform .45s ease'
+  ;['s2e','s2t','s2f'].forEach((id,i)=>{setTimeout(()=>{const el=$(id);el.style.transition=ease;el.style.opacity='1';el.style.transform='translateY(0)'},i*120)})
+  await sleep(480)
+  for(let i=0;i<5;i++){await sleep(170);const el=$(`m${i}`);el.style.transition='opacity .4s ease,transform .4s ease';el.style.opacity='1';el.style.transform='translateX(0)'}
+  await sleep(550)
+  on($('m0'),'hi')  // highlight آسمانه
+  await sleep(900)
+
+  // ── S3: CARD OPEN/CLOSE (8–12.5s) ──
+  await fadeOut(); showScene('s3'); setPD(2)
+  // reset
+  $('bc').style.opacity='0';$('bc').style.transform='translateY(18px)';off($('bc'),'open-state')
+  off($('cbody'),'open');off($('tog'),'open')
+  ;['ac1','ac2'].forEach(id=>{const el=$(id);el.style.opacity='0';el.style.transform='translateY(10px)';off(el,'in')})
+  await fadeIn()
+  await sleep(150)
+  $('bc').style.transition='opacity .55s,transform .55s'
+  $('bc').style.opacity='1';$('bc').style.transform='translateY(0)'
+  on($('bc'),'in')
+  await sleep(700)
+  // OPEN
+  on($('tog'),'open');on($('cbody'),'open');on($('bc'),'open-state')
+  await sleep(1500)
+  // CLOSE
+  off($('tog'),'open');off($('cbody'),'open');off($('bc'),'open-state')
+  await sleep(600)
+  // show 2 more cards
+  ;['ac1','ac2'].forEach((id,i)=>{setTimeout(()=>{const el=$(id);el.style.transition='opacity .4s ease,transform .4s ease';on(el,'in')},i*200)})
+  await sleep(800)
+
+  // ── S4: CAREER (12.5–15s) ──
+  await fadeOut(); showScene('s4'); setPD(3)
+  $('ga').style.opacity='0';$('gc').style.opacity='0';$('gm').style.transition='opacity 1.2s';$('gm').style.opacity='0.8'
+  ;['s4e','s4t'].forEach(id=>{const el=$(id);el.style.opacity='0';el.style.transform='translateY(10px)';el.style.transition='none'})
+  ;['f0','f1','f2'].forEach(id=>{const el=$(id);el.style.opacity='0';el.style.transform='translateX(20px)';el.style.transition='none';off(el,'in')})
+  await fadeIn()
+  ;['s4e','s4t'].forEach((id,i)=>{setTimeout(()=>{const el=$(id);el.style.transition='opacity .45s ease,transform .45s ease';el.style.opacity='1';el.style.transform='translateY(0)'},i*140)})
+  await sleep(400)
+  for(let i=0;i<3;i++){await sleep(340);const el=$(`f${i}`);el.style.transition='opacity .5s ease,transform .5s ease';on(el,'in')}
+  await sleep(900)
+
+  // ── S5: END (15–16s) ──
+  await fadeOut(); showScene('s5'); setPD(4)
+  $('gm').style.opacity='0';$('ga').style.transition='opacity 1.5s';$('ga').style.opacity='1'
+  const sp=$('et').querySelector('span')
+  sp.style.animation='none';sp.style.opacity='0';sp.style.transform='translateY(100%)'
+  $('esub').style.opacity='0';$('ebar').style.opacity='0';$('efill').style.width='0%';$('rbtn').style.opacity='0'
+  await fadeIn()
+  await sleep(100)
+  void sp.offsetWidth
+  sp.style.transition='opacity .85s cubic-bezier(.16,1,.3,1),transform .85s cubic-bezier(.16,1,.3,1)'
+  sp.style.opacity='1';sp.style.transform='translateY(0)'
+  await sleep(700)
+  $('esub').style.transition='opacity .6s ease';$('esub').style.opacity='1'
+  await sleep(400)
+  $('ebar').style.transition='opacity .4s ease';$('ebar').style.opacity='1'
+  await sleep(200)
+  $('efill').style.transition='width 3s linear';$('efill').style.width='100%'
+  await sleep(1000)
+  $('rbtn').style.transition='opacity .5s ease';$('rbtn').style.opacity='1'
+  clearInterval(tsi)
+}
+
+window.addEventListener('load',()=>setTimeout(run,400))
+</script>
+</body>
+</html>
