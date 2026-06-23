@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سلام ؛ پیمان هستم</title>
+<link rel="preconnect" href="https://fonts.bunny.net">
+<link href="https://fonts.bunny.net/css?family=vazirmatn:300,400,500,600,700,800,900|lalezar:400|jetbrains-mono:400,500,600,700" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:        #0A1A22;
+    --ink-2:      #102832;
+    --ink-3:      #163542;
+    --paper:      #F2ECDC;
+    --paper-ink:  #1C2A22;
+    --amber:      #FFB627;
+    --coral:      #FF6B4A;
+    --mint:       #46E0B8;
+    --sky:        #6FC8FF;
+    --lavender:   #B9A6FF;
+    --text:       #ECE7DC;
+    --muted:      #92ABB2;
+    --line:       rgba(236,231,220,0.14);
+    --line-soft:  rgba(236,231,220,0.07);
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--text);
+    font-family: 'Vazirmatn', Tahoma, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--amber); color: #1C1300; }
+  :focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; border-radius: 4px; }
+
+  .mono { font-family: 'JetBrains Mono', monospace; direction: ltr; unicode-bidi: isolate; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 16px 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(10,26,34,0.82);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-logo {
+    font-family: 'Lalezar', sans-serif; font-size: 19px; letter-spacing: 1px;
+    color: var(--amber); display: flex; align-items: center; gap: 8px;
+  }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+  .nav-role { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.5px; direction: ltr; }
+  .barcode {
+    width: 30px; height: 14px;
+    background-image: repeating-linear-gradient(90deg,
+      var(--muted) 0 1px, transparent 1px 2px,
+      var(--muted) 2px 4px, transparent 4px 5px,
+      var(--muted) 5px 7px, transparent 7px 9px,
+      var(--muted) 9px 10px, transparent 10px 12px);
+    opacity: 0.6;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 100px 20px 0; position: relative; overflow: hidden;
+    min-height: 100vh; display: flex; align-items: center;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: linear-gradient(var(--line-soft) 1px, transparent 1px), linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size: 52px 52px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 100%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: ''; position: absolute; top: -120px; right: -100px;
+    width: 560px; height: 560px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,182,39,0.08) 0%, rgba(255,107,74,0.04) 50%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; z-index: 1; width: 100%; padding-bottom: 80px; }
+
+  .hero-terminal {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(70,224,184,0.07); border: 1px solid rgba(70,224,184,0.2);
+    border-radius: 6px; padding: 6px 12px; margin-bottom: 36px;
+    opacity: 0; animation: fade-up 0.4s ease forwards 0.05s;
+  }
+  .hero-terminal-prompt { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--mint); direction: ltr; display: flex; align-items: center; gap: 6px; }
+  .hero-terminal-prompt::before { content: '▶'; font-size: 7px; opacity: 0.7; }
+  .hero-terminal-cursor { display: inline-block; width: 7px; height: 13px; background: var(--mint); border-radius: 1px; animation: blink 1s step-end infinite; vertical-align: middle; margin-inline-start: 2px; }
+
+  .hero-name-block { margin-bottom: 10px; }
+  .hero-name-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; opacity: 0; animation: fade-up 0.4s ease forwards 0.1s; }
+  .hero-name { font-size: clamp(52px, 14vw, 96px); font-weight: 900; line-height: 0.92; letter-spacing: -2px; color: var(--text); overflow: hidden; }
+  .hero-name-line { display: block; overflow: hidden; }
+  .hero-name-line span { display: block; opacity: 0; transform: translateY(100%); animation: slide-up 0.65s cubic-bezier(0.16,1,0.3,1) forwards; }
+  .hero-name-line:nth-child(1) span { animation-delay: 0.18s; }
+  .hero-name-en { font-family: 'JetBrains Mono', monospace; font-size: clamp(11px, 2.5vw, 15px); letter-spacing: 5px; color: var(--amber); text-transform: uppercase; direction: ltr; margin-top: 14px; opacity: 0; animation: fade-up 0.5s ease forwards 0.45s; }
+
+  .hero-role-strip {
+    display: flex; align-items: stretch; gap: 0; margin: 36px 0 32px;
+    border: 1px solid var(--line); border-radius: 10px; background: var(--ink-2); overflow: hidden;
+    opacity: 0; animation: fade-up 0.5s ease forwards 0.55s;
+  }
+  .hero-role-cell { flex: 1; padding: 14px 16px; border-inline-end: 1px solid var(--line); min-width: 0; }
+  .hero-role-cell:last-child { border-inline-end: none; }
+  .hero-cell-label { font-family: 'JetBrains Mono', monospace; font-size: 8.5px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 5px; }
+  .hero-cell-value { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.3; }
+  .hero-cell-value.amber { color: var(--amber); }
+  .hero-cell-value.mint { color: var(--mint); display: flex; align-items: center; gap: 6px; }
+  .hero-cell-sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 2px; direction: ltr; }
+
+  .status-dot-live { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--mint); flex-shrink: 0; }
+  .status-dot-pulse { animation: blink 1.3s ease infinite; }
+
+  .hero-bottom-row { display: flex; align-items: flex-end; gap: 20px; flex-wrap: wrap; opacity: 0; animation: fade-up 0.5s ease forwards 0.7s; }
+  .hero-desc { flex: 1; min-width: 200px; font-size: 14px; color: var(--muted); line-height: 1.85; }
+  .hero-desc strong { color: var(--text); font-weight: 600; }
+
+  .hero-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; opacity: 0; animation: fade-up 0.5s ease forwards 0.85s; }
+  .hero-chip { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 4px 10px; border-radius: 4px; background: rgba(255,255,255,0.04); border: 1px solid var(--line); color: var(--muted); letter-spacing: 0.5px; transition: border-color 0.2s, color 0.2s; }
+  .hero-chip:hover { border-color: var(--amber); color: var(--amber); }
+  .hero-chip.hi { border-color: rgba(255,182,39,0.3); color: var(--amber); background: rgba(255,182,39,0.06); }
+
+  .hero-scroll-hint { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; opacity: 0; animation: fade-up 0.5s ease forwards 1.1s; }
+  .hero-scroll-line { width: 1px; height: 36px; background: linear-gradient(180deg, var(--amber), transparent); animation: scroll-pulse 2s ease infinite; }
+  @keyframes scroll-pulse { 0%, 100% { opacity: 0.3; transform: scaleY(1); } 50% { opacity: 1; transform: scaleY(1.1); } }
+  .hero-scroll-label { font-family: 'JetBrains Mono', monospace; font-size: 8px; letter-spacing: 3px; color: var(--muted); writing-mode: horizontal-tb; text-transform: uppercase; }
+
+  @keyframes slide-up { to { opacity: 1; transform: translateY(0); } }
+  @keyframes fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+  /* IDEAS SECTION */
+  .ideas-section { padding: 50px 20px 70px; }
+  .section-header { margin-bottom: 26px; }
+  .section-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--coral); text-transform: uppercase; margin-bottom: 8px; }
+  .section-title { font-size: 21px; font-weight: 700; }
+
+  .filter-tabs { display: flex; gap: 7px; margin-bottom: 26px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
+  .filter-tabs::-webkit-scrollbar { display: none; }
+  .filter-tab { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 7px 14px; border-radius: 100px; border: 1px solid var(--line); color: var(--muted); background: transparent; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; }
+  .filter-tab:hover { border-color: var(--amber); color: var(--text); }
+  .filter-tab.active { background: var(--amber); border-color: var(--amber); color: #1C1300; font-weight: 600; }
+  .filter-tab[data-filter="live"].active { background: var(--mint); border-color: var(--mint); color: #06251D; }
+  .filter-tab[data-filter="wip"].active { background: var(--amber); border-color: var(--amber); color: #1C1300; }
+  .filter-tab[data-filter="idea"].active { background: var(--sky); border-color: var(--sky); color: #07212F; }
+  .filter-tab[data-filter="iran"].active { background: var(--coral); border-color: var(--coral); color: #2A0D04; }
+  .filter-tab[data-filter="global"].active { background: var(--lavender); border-color: var(--lavender); color: #1C1233; }
+
+  .ideas-list { display: flex; flex-direction: column; gap: 14px; }
+
+  /* Boarding-pass idea card */
+  .idea-card {
+    --status-color: var(--sky);
+    display: flex; background: var(--ink-2); border: 1px solid var(--line);
+    border-radius: 16px; overflow: hidden;
+    transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .idea-card[data-status="live"] { --status-color: var(--mint); }
+  .idea-card[data-status="wip"]  { --status-color: var(--amber); }
+  .idea-card[data-status="idea"] { --status-color: var(--sky); }
+  .idea-card:hover { border-color: var(--status-color); transform: translateY(-2px); box-shadow: 0 10px 28px -14px rgba(0,0,0,0.55); }
+  .idea-card.open { border-color: var(--status-color); }
+
+  .idea-stub {
+    flex: 0 0 42px;
+    background: color-mix(in srgb, var(--status-color) 14%, var(--ink-3));
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    position: relative; border-inline-end: 1px dashed var(--line);
+  }
+  .idea-stub::before, .idea-stub::after {
+    content: ""; position: absolute; inset-inline-end: -7px; width: 14px; height: 14px;
+    background: var(--ink); border-radius: 50%;
+  }
+  .idea-stub::before { top: -7px; }
+  .idea-stub::after { bottom: -7px; }
+  .stub-code { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; color: var(--status-color); writing-mode: vertical-rl; text-orientation: mixed; letter-spacing: 1px; }
+  .stub-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--status-color); flex-shrink: 0; }
+  .stub-dot.pulse { animation: blink 1.2s ease infinite; }
+
+  .idea-main { flex: 1; min-width: 0; }
+  .idea-header { padding: 16px 16px 16px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
+  .idea-meta { flex: 1; min-width: 0; }
+  .idea-title { font-size: 15px; font-weight: 700; line-height: 1.35; margin-bottom: 5px; }
+  .idea-title-en { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--muted); }
+  .idea-badges { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+
+  .badge { display: inline-flex; align-items: center; gap: 4px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.5px; padding: 3px 9px; border-radius: 100px; font-weight: 600; text-transform: uppercase; }
+  .badge-dot { width: 5px; height: 5px; border-radius: 50%; display: inline-block; }
+  .badge-live { background: rgba(70,224,184,0.12); color: var(--mint); }
+  .badge-live .badge-dot { background: var(--mint); }
+  .badge-wip { background: rgba(255,182,39,0.12); color: var(--amber); }
+  .badge-wip .badge-dot { background: var(--amber); animation: blink 1s ease infinite; }
+  .badge-idea { background: rgba(111,200,255,0.12); color: var(--sky); }
+  .badge-idea .badge-dot { background: var(--sky); }
+  .badge-iran { background: rgba(255,107,74,0.12); color: var(--coral); }
+  .badge-global { background: rgba(185,166,255,0.12); color: var(--lavender); }
+  .badge-amadeus { background: rgba(255,182,39,0.12); color: var(--amber); }
+  .badge-turkish { background: rgba(255,128,149,0.12); color: #FF8095; }
+  .badge-research { background: rgba(70,224,184,0.10); color: var(--mint); }
+
+  .idea-toggle { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.3s ease; color: var(--muted); }
+  .idea-card.open .idea-toggle { background: var(--status-color); border-color: var(--status-color); color: #0A1A22; transform: rotate(45deg); }
+  .idea-toggle svg { width: 14px; height: 14px; }
+
+  .idea-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.16,1,0.3,1); }
+  .idea-body.open { grid-template-rows: 1fr; }
+  .idea-body-inner { overflow: hidden; min-height: 0; padding: 0 16px 0 14px; }
+  .idea-body.open .idea-body-inner { padding-bottom: 20px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
+  .idea-body-text { font-size: 13.5px; line-height: 1.85; color: rgba(236,231,220,0.82); margin-bottom: 13px; }
+  .idea-body-en { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--muted); line-height: 1.7; padding-top: 12px; border-top: 1px solid var(--line-soft); direction: ltr; text-align: left; }
+
+  /* PAGINATION */
+  .pagination-wrap {
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; margin-top: 36px; padding-top: 24px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .page-info {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted);
+    padding: 0 8px;
+  }
+  .page-btn {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    padding: 7px 16px; border-radius: 8px; border: 1px solid var(--line);
+    color: var(--muted); background: transparent; cursor: pointer;
+    transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;
+  }
+  .page-btn:hover:not(:disabled) { border-color: var(--amber); color: var(--amber); }
+  .page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .page-dots {
+    display: flex; gap: 6px; align-items: center;
+  }
+  .page-dot {
+    width: 28px; height: 28px; border-radius: 7px; border: 1px solid var(--line);
+    background: transparent; color: var(--muted);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center;
+  }
+  .page-dot:hover { border-color: var(--amber); color: var(--amber); }
+  .page-dot.active { background: var(--amber); border-color: var(--amber); color: #1C1300; font-weight: 700; }
+
+  /* AMADEUS TEAM BANNER */
+  .amadeus-team-banner { margin: 26px 0 0; opacity: 0; animation: fade-up 0.6s ease forwards 0.45s; }
+  .amadeus-team-inner {
+    display: flex; align-items: center; gap: 14px;
+    background: linear-gradient(135deg, rgba(255,182,39,0.08) 0%, rgba(255,107,74,0.06) 100%);
+    border: 1px solid rgba(255,182,39,0.35); border-radius: 14px; padding: 14px 18px;
+    position: relative; overflow: hidden;
+  }
+  .amadeus-team-inner::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, var(--amber) 0%, var(--coral) 100%); border-radius: 4px 0 0 4px; }
+  .amadeus-team-inner::after { content: 'AMADEUS'; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); font-family: 'JetBrains Mono', monospace; font-size: 52px; font-weight: 700; letter-spacing: 8px; color: rgba(255,182,39,0.04); pointer-events: none; white-space: nowrap; }
+  .amadeus-logo-mark { width: 38px; height: 38px; flex-shrink: 0; background: linear-gradient(135deg, var(--amber), var(--coral)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: #1C1300; box-shadow: 0 4px 14px rgba(255,182,39,0.3); position: relative; z-index: 1; }
+  .amadeus-team-text { flex: 1; position: relative; z-index: 1; }
+  .amadeus-team-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 2.5px; color: var(--amber); text-transform: uppercase; margin-bottom: 3px; }
+  .amadeus-team-title { font-size: 14.5px; font-weight: 700; color: var(--text); line-height: 1.3; }
+  .amadeus-team-subtitle { font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+  .amadeus-team-pill { flex-shrink: 0; position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 5px; background: rgba(255,182,39,0.12); border: 1px solid rgba(255,182,39,0.3); border-radius: 100px; padding: 5px 12px; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 600; color: var(--amber); letter-spacing: 0.5px; }
+  .amadeus-team-pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--mint); animation: blink 1.4s ease infinite; }
+
+  /* CAREER SECTION */
+  .career-section { padding: 80px 20px 0; position: relative; overflow: hidden; }
+  .career-section::before { content: ''; position: absolute; bottom: 0; left: -100px; right: -100px; height: 400px; background: radial-gradient(ellipse 70% 50% at 50% 100%, rgba(255,182,39,0.06) 0%, transparent 70%); pointer-events: none; }
+  .career-flights { display: flex; flex-direction: column; gap: 0; position: relative; margin-top: 40px; }
+  .career-flights::before { content: ''; position: absolute; right: 19px; top: 20px; bottom: 20px; width: 2px; background: linear-gradient(180deg, var(--sky) 0%, var(--lavender) 40%, var(--amber) 100%); opacity: 0.25; }
+  .flight-card { display: flex; gap: 20px; align-items: flex-start; padding: 28px 0; border-bottom: 1px solid var(--line-soft); opacity: 0; transform: translateX(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .flight-card.visible { opacity: 1; transform: translateX(0); }
+  .flight-card:last-child { border-bottom: none; }
+  .flight-node { width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; position: relative; z-index: 1; }
+  .fn-iraqi { background: rgba(0,130,220,0.1); border: 1.5px solid rgba(0,130,220,0.25); box-shadow: 0 0 20px rgba(0,130,220,0.08); }
+  .fn-turkish { background: rgba(210,30,45,0.1); border: 1.5px solid rgba(210,30,45,0.25); box-shadow: 0 0 20px rgba(210,30,45,0.08); }
+  .fn-amadeus { background: rgba(255,182,39,0.12); border: 1.5px solid rgba(255,182,39,0.4); box-shadow: 0 0 24px rgba(255,182,39,0.18); animation: pulse-glow 2.5s ease infinite; }
+  @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 24px rgba(255,182,39,0.18); } 50% { box-shadow: 0 0 36px rgba(255,182,39,0.35); } }
+  .flight-content { flex: 1; min-width: 0; }
+  .flight-phase { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 2.5px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+  .flight-company { font-size: 20px; font-weight: 800; line-height: 1.1; margin-bottom: 3px; letter-spacing: -0.5px; }
+  .fc-iraqi { color: var(--sky); }
+  .fc-turkish { color: #FF8095; }
+  .fc-amadeus { color: var(--amber); }
+  .flight-company-en { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-bottom: 12px; }
+  .flight-desc { font-size: 13.5px; color: rgba(236,231,220,0.72); line-height: 1.8; margin-bottom: 12px; }
+  .flight-route { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; }
+  .fr-code { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: 1px; }
+  .fr-sep { font-size: 10px; color: var(--muted); direction: ltr; letter-spacing: -1px; }
+  .fr-label { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: var(--muted); }
+
+  /* FOOTER */
+  footer { margin-top: 80px; padding: 0 20px 0; position: relative; overflow: hidden; }
+  .footer-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--line), transparent); margin-bottom: 48px; }
+  .footer-inner { display: flex; flex-direction: column; align-items: center; gap: 20px; padding-bottom: 48px; }
+  .footer-name { font-size: clamp(36px, 10vw, 64px); font-weight: 900; letter-spacing: -1px; color: transparent; -webkit-text-stroke: 1px rgba(236,231,220,0.15); line-height: 1; user-select: none; }
+  .footer-status { display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 1px; }
+  .footer-links { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+  .footer-link { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 5px 14px; border-radius: 100px; border: 1px solid var(--line); color: var(--muted); text-decoration: none; letter-spacing: 1px; transition: border-color 0.2s, color 0.2s; }
+  .footer-link:hover { border-color: var(--amber); color: var(--amber); }
+  .footer-copy { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: rgba(146,171,178,0.4); letter-spacing: 1.5px; text-transform: uppercase; }
+
+  @keyframes pulse-ring { 0% { transform: scale(1); opacity: 0.7; } 70% { transform: scale(1.18); opacity: 0; } 100% { transform: scale(1.18); opacity: 0; } }
+
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; } }
+
+  @media (min-width: 760px) {
+    .hero, .ideas-section { padding-left: 0; padding-right: 0; }
+    .hero { padding: 100px 0 0; }
+    .hero .wrap, .ideas-section .wrap { padding: 0 24px; }
+    .ideas-list { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .hero-role-strip { flex-direction: row; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">✦ IDEAS</div>
+  <div class="nav-right">
+    <span class="nav-role">SOFTWARE ENGINEER · AMADEUS IT GROUP</span>
+    <span class="barcode"></span>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div class="hero-terminal">
+      <span class="hero-terminal-prompt">peyman@amadeus:~$ whoami<span class="hero-terminal-cursor"></span></span>
+    </div>
+    <div class="hero-name-block">
+      <div class="hero-name-label">// travel tech · amadeus it group</div>
+      <div class="hero-name">
+        <span class="hero-name-line"><span>سلام<span style="color: var(--amber);">،</span></span></span>
+        <span class="hero-name-line"><span>پیمان هستم<span style="color: var(--amber);">.</span></span></span>
+      </div>
+      <div class="hero-name-en">PEYMAN</div>
+    </div>
+    <div class="hero-role-strip">
+      <div class="hero-role-cell">
+        <div class="hero-cell-label">Current Role</div>
+        <div class="hero-cell-value amber">معمار فناوری سفر</div>
+        <div class="hero-cell-sub">Amadeus IT Group · Madrid / Remote</div>
+      </div>
+      <div class="hero-role-cell">
+        <div class="hero-cell-label">وضعیت</div>
+        <div class="hero-cell-value mint"><span class="status-dot-live status-dot-pulse"></span>در حال ساختن</div>
+        <div class="hero-cell-sub">Open to side-projects</div>
+      </div>
+      <div class="hero-role-cell">
+        <div class="hero-cell-label">Focus</div>
+        <div class="hero-cell-value">Travel APIs &amp; Data</div>
+        <div class="hero-cell-sub">GDS · Amadeus APIs · Python</div>
+      </div>
+    </div>
+    <div class="hero-bottom-row">
+      <p class="hero-desc">
+در دنیای فناوری سفر فعالیت می‌کنم.<br>
+همراه تیم‌هایی که با داده، API و تکنولوژی، تجربه‌های بهتری برای سفر می‌سازن.<br>
+اینجا ردپای ایده‌ها و پروژه‌هاییه که بعضی‌هاشون به مقصد رسیدن و بعضی‌هاشون هنوز در راهن.
+      </p>
+    </div>
+    <div class="hero-chips">
+      <span class="hero-chip hi">Python</span>
+      <span class="hero-chip hi">Amadeus APIs</span>
+      <span class="hero-chip">FastAPI</span>
+      <span class="hero-chip">pandas</span>
+      <span class="hero-chip">scikit-learn</span>
+      <span class="hero-chip">GDS / NDC</span>
+      <span class="hero-chip">Travel Tech</span>
+      <span class="hero-chip">REST APIs</span>
+    </div>
+    <div class="hero-scroll-hint">
+      <div class="hero-scroll-line"></div>
+      <span class="hero-scroll-label">scroll</span>
+    </div>
+  </div>
+</section>
+
+<section class="ideas-section">
+  <div class="wrap">
+    <div class="section-header">
+      <div class="section-eyebrow">ایده‌ها · Ideas</div>
+      <h2 class="section-title">روی هر ایده کلیک کن بیشتر بخون</h2>
+    </div>
+
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all" onclick="filterIdeas('all', this)">همه</button>
+      <button class="filter-tab" data-filter="live" onclick="filterIdeas('live', this)">اجرا شده ✓</button>
+      <button class="filter-tab" data-filter="wip" onclick="filterIdeas('wip', this)">در حال اجرا</button>
+      <button class="filter-tab" data-filter="idea" onclick="filterIdeas('idea', this)">ایده‌پردازی</button>
+      <button class="filter-tab" data-filter="iran" onclick="filterIdeas('iran', this)">ایران</button>
+      <button class="filter-tab" data-filter="global" onclick="filterIdeas('global', this)">جهانی</button>
+    </div>
+
+    <div class="ideas-list" id="ideas-list">
+      <!-- PAGE 1 -->
+
+      <div class="idea-card" data-status="wip" data-geo="iran" data-page="1">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·00</span><span class="stub-dot pulse"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">آسمانه ✈ — سامانه استیفای حقوق مسافران هوایی ایران</div>
+              <div class="idea-title-en">Asmaaneh — Iranian Air Passenger Rights &amp; Compensation Platform</div>
+              <div class="idea-badges">
+                <span class="badge badge-wip"><span class="badge-dot"></span>در حال اجرا</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">هر ساله میلیون‌ها مسافر ایرانی به دلیل تأخیر، لغو پرواز یا ممانعت از پرواز، حق قانونی دارند غرامت دریافت کنند — اما اغلب از این حق بی‌خبرند یا توان پیگیری اداری ندارند. آسمانه اولین سامانه‌ی تخصصی احقاق حقوق مسافران هوایی ایران است: مسافر شماره پرواز، تاریخ و مدت تأخیر را وارد می‌کند؛ سامانه طبق منشور حقوق مسافران ایران (مصوب ۱۴۰۱) میزان غرامت قابل مطالبه را محاسبه می‌کند — تأخیر ۲ تا ۵ ساعت: ۳۰٪ قیمت بلیت، بیش از ۵ ساعت: ۱۰۰٪، لغو پرواز: ۱۰۰٪ + اسکان. تیم حقوقی آسمانه کل فرآیند مذاکره و پیگیری با ایرلاین را به عهده می‌گیرد؛ کارمزد تنها در صورت موفقیت و از محل همان غرامت کسر می‌شود. الهام گرفته از مدل جهانی AirHelp — اما کاملاً بومی، با قوانین ایران، و ساخته‌شده برای بازاری که هنوز هیچ بازیگری در آن نیست. موکاپ سایت کامل طراحی شده و در مرحله ساخت MVP است.</p>
+            <p class="idea-body-en">Asmaaneh ("sky" in Persian) is Iran's first dedicated air passenger rights and compensation recovery platform — a localized equivalent of AirHelp built specifically for the Iranian aviation market, where millions of passengers annually forfeit compensation they're legally entitled to due to lack of awareness and bureaucratic friction.
+
+Core mechanic: passenger enters flight number, date, and delay duration; the platform computes claimable compensation under Iran's Air Passenger Rights Charter (approved 1401/2022): 2–5hr delay → 30% of base fare; 5hr+ delay → 100%; flight cancellation → 100% refund + hotel + ground transport. Platform handles all document prep and negotiation with the airline. Fee model: success-only commission — zero upfront cost to passenger.
+
+Technical stack: Django REST + React (RTL, Persian-first) + Celery + PostgreSQL + Kavenegar SMS. Case state machine: intake → document collection → airline negotiation → legal escalation → payout. Legal escalation: partner law firm files formal complaint with the Civil Aviation Organization if airline refuses.
+
+Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M+ domestic passenger trips annually, chronically high delay rates. Claim window: up to 6 months post-flight. Status: UI/UX mockup complete, MVP in development.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="iran" data-page="1">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·01</span><span class="stub-dot pulse"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">قیمت‌گذاری گروهی زنده برای تور</div>
+              <div class="idea-title-en">Live Group Pricing for Tour Packages</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">یه مکانیزم قیمت‌گذاری پلکانی زنده برای تورهای گروهی: هرچقدر آدم‌های بیشتری ثبت‌نام کنن، قیمت برای <b>همه</b> — حتی کسایی که زودتر خریدن — پایین‌تر میاد. تفاوت قیمت خودکار به کیف‌پول مشتری برگشت می‌خوره. این مدل هم انگیزه ورود زودتر رو ایجاد می‌کنه، هم حس جمعی و اشتراک‌گذاری رو. مثال: کویر مرنجاب — ۱-۹ نفر: ۵M ت، ۱۰-۱۹ نفر: ۴.۷M ت، ۲۰-۲۹ نفر: ۴.۴M ت، ۳۰+ نفر: ۴.۰M ت.</p>
+            <p class="idea-body-en">A live tiered pricing engine for tour packages: as more people register, the price drops for everyone — including early buyers who get an automatic wallet refund. This creates dual incentives: early booking (lock in your seat) and social sharing (more friends = cheaper for all). The UI shows a real-time group meter with tier milestones, current registrant count, and a "X more people until next tier" nudge. Stack: React front-end, Python backend, wallet/refund logic via payment gateway webhooks.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="iran" data-page="1">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·02</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">موتور جستجوی سفر بر اساس بودجه</div>
+              <div class="idea-title-en">Budget-First Travel Meta-Search Engine</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">به‌جای ساخت دیتابیس بسته خودش، این موتور دقیقاً مثل یه سرچ‌انجین عمل می‌کنه: کاربر فقط بودجه کل، تعداد مسافر و تعداد شب رو وارد می‌کنه؛ سیستم هم‌زمان روی همه‌ی سایت‌های آژانس‌های ایرانی (علی‌بابا، فلایتیو، اسنپ‌تریپ، مقصد و...) جستجو می‌کنه، قیمت بلیط + هتل رو جمع می‌بنده، و فقط مقصدهایی رو نشون می‌ده که واقعاً با اون بودجه جور درمیاد — بدون نگه‌داشتن داده‌ی خودش، فقط یه لایه جستجو و مقایسه روی سایت‌های موجود.</p>
+            <p class="idea-body-en">A pure meta-search layer, not a closed dataset: user enters total budget, traveler count, and nights. The engine queries Iranian agency sites in real time (Alibaba.ir, Flytoday, Snapptrip, Mosafer, etc.), aggregates flight + hotel pricing per route, and surfaces only destinations that fit within budget. Closest global parallels — Elude and Wander (budget-in, destinations-out) — but neither indexes the Iranian agency ecosystem or aggregates beyond their own inventory.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="wip" data-geo="iran" data-page="1">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·03</span><span class="stub-dot pulse"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">دستیار هوشمند برنامه‌ریزی سفر</div>
+              <div class="idea-title-en">AI Travel Planner for Persian Speakers</div>
+              <div class="idea-badges">
+                <span class="badge badge-wip"><span class="badge-dot"></span>در حال اجرا</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">یه چت‌بات فارسی که با استفاده از Amadeus API و مدل‌های زبانی بزرگ، برنامه سفر شخصی‌سازی‌شده میده. کاربر بگه «یه هفته اروپا با بودجه متوسط» — سیستم بلیط، هتل، و اکتیویتی رو پیشنهاد میده.</p>
+            <p class="idea-body-en">A Persian-language AI travel assistant leveraging Amadeus APIs + LLMs. User inputs trip intent in natural language; system returns full itinerary with flights, hotels, and activities. Core stack: Python, FastAPI, Claude/GPT, Amadeus Travel SDK.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="iran" data-page="1">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·04</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">پلتفرم بورس سفر ایرانی‌ها</div>
+              <div class="idea-title-en">Iranian Traveler Exchange Platform</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">مارکت‌پلیسی که مسافرین ایرانی بتونن بلیط، هتل، یا تور نیمه‌کاره‌شون رو به هم بفروشن. مثل دیوار برای سفر — با سیستم اعتبارسنجی و پرداخت امن داخلی.</p>
+            <p class="idea-body-en">A peer-to-peer travel exchange where Iranian travelers can resell unused bookings — flights, hotels, tour packages — to other users. Think "Viagogo for Iranian travel" with verified listings and escrow-style payments.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="live" data-geo="global" data-page="1">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·05</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">مقایسه قیمت پرواز با NDC</div>
+              <div class="idea-title-en">NDC-Based Flight Price Aggregator</div>
+              <div class="idea-badges">
+                <span class="badge badge-live"><span class="badge-dot"></span>اجرا شده</span>
+                <span class="badge badge-global">جهانی</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">موتور جستجوی پرواز که از NDC مستقیماً با ایرلاین‌ها ارتباط میگیره و قیمت‌های اکسکلوسیو نشون میده که در GDS سنتی نیستن. نمونه‌های مشابه: Dohop، Kiwi.com</p>
+            <p class="idea-body-en">A flight search engine using IATA NDC standard to connect directly with airlines, surfacing exclusive fares unavailable in traditional GDS channels. This model is live globally — companies like Dohop and Kiwi already operate here. The opportunity: build for underserved markets.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="iran" data-page="1">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·06</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">سیستم مدیریت تجربه گردشگر</div>
+              <div class="idea-title-en">Tourist Experience Management System</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">یه SaaS برای هتل‌ها و اقامتگاه‌های ایرانی که بتونن چرخه کامل مهمان رو مدیریت کنن: pre-arrival، check-in دیجیتال، در طول اقامت، و post-stay. با داشبورد تحلیل رضایت.</p>
+            <p class="idea-body-en">SaaS platform for Iranian hotels and boutique stays: digital pre-arrival communication, contactless check-in, in-stay service requests via QR, and automated post-stay NPS collection. Stack: Python Django + React + WhatsApp Business API.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="wip" data-geo="global" data-page="1">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·07</span><span class="stub-dot pulse"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">داده‌کاوی الگوهای سفر ایرانیان خارج</div>
+              <div class="idea-title-en">Diaspora Travel Pattern Analytics</div>
+              <div class="idea-badges">
+                <span class="badge badge-wip"><span class="badge-dot"></span>در حال اجرا</span>
+                <span class="badge badge-global">جهانی</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">تحلیل داده سفر ایرانیان مقیم خارج برای شناخت الگوهای بازگشت، مقصدهای محبوب، و فصل‌های پیک. این داده می‌تونه به ایرلاین‌ها و آژانس‌ها برای قیمت‌گذاری هدفمند کمک کنه.</p>
+            <p class="idea-body-en">Mining anonymized booking and search data to map travel behaviors of the Iranian diaspora (3M+ in US/EU/Canada). Key insights: reunion travel patterns, optimal route bundling, price sensitivity curves. Built in Python: pandas, scikit-learn, Amadeus Analytics APIs.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- IDEAS FROM IRAN CONTEXT (LIVE) -->
+
+      <div class="idea-card" data-status="live" data-geo="iran" data-page="1">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·08</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">نرخ‌گذاری اتوماتیک بلیط بر اساس نیاز بازار</div>
+              <div class="idea-title-en">AI-Driven Ticket Pricing Engine — Iran Market</div>
+              <div class="idea-badges">
+                <span class="badge badge-live"><span class="badge-dot"></span>اجرا شده</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">موتور نرخ‌گذاری هوشمندی که قیمت بلیط‌های هواپیما رو بر اساس تقاضای لحظه‌ای بازار، تحلیل رقبا (آژانس‌ها و سیستم‌های دیگه)، و مدل‌های ورودی از تقویم، مناسبت‌ها، و ظرفیت پروازی تنظیم می‌کنه. این ایده در بازار ایران پیاده‌سازی شده و تجربه‌ی زیسته داره — نادر و ارزشمند.</p>
+            <p class="idea-body-en">Live implementation: automated fare pricing engine calibrated for the Iranian aviation market. Inputs: competitor scraping, real-time demand signals, calendar events (Nowruz, Arba'een), route load factors. Outputs: optimized fare recommendations per route/day. This mirrors what Delta is now doing globally with Fetcherr — but Peyman shipped it for Iran first.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="live" data-geo="iran" data-page="1">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·09</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">پیشنهاد چارتر مردن مسیر پروازی با AI</div>
+              <div class="idea-title-en">AI Charter Route Death Prediction System</div>
+              <div class="idea-badges">
+                <span class="badge badge-live"><span class="badge-dot"></span>اجرا شده</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">سیستمی که بر اساس شاخص‌های عملیاتی (نرخ پر شدن صندلی، فرکانس پرواز، روند فروش تاریخی) پیشنهاد می‌ده کدام مسیر پروازی به زودی از سوددهی خارج می‌شه — و کی باید چارتر شود یا حذف شود. تصمیم‌گیری داده‌محور به جای حدس مدیران.</p>
+            <p class="idea-body-en">Analytics system that predicts route viability using historical load factors, booking velocity, and revenue yield data. Flags routes heading toward unprofitability and recommends charter conversion or cessation — replacing gut-feel with data-driven route management. Built with Python + scikit-learn.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="live" data-geo="iran" data-page="1">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·10</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">ربات اتومات انتقال اطلاعات بلیط از سپهر/مقیم به نیرا</div>
+              <div class="idea-title-en">Auto Transfer Bot — Sepehr/Moghim Issuance → NIARA Registration</div>
+              <div class="idea-badges">
+                <span class="badge badge-live"><span class="badge-dot"></span>اجرا شده</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">آژانس‌های هواپیمایی ایران بلیط رو در سامانه‌های سپهر یا مقیم صادر می‌کنن — بعد از صدور، اپراتور باید خروجی رو دستی بخونه و همه اطلاعات رو دوباره وارد نرم‌افزار نیرا کنه. این فرآیند وقت‌بر، خطاخیز، و کاملاً تکراری بود. یه ربات ساختم که بلافاصله بعد از صدور بلیط، خروجی سپهر/مقیم رو می‌خونه و بدون حتی یک دقیقه معطلی، به صورت کامل و دقیق در نیرا ثبت می‌کنه. صفر خطای دستی، صفر وقت تلف‌شده.</p>
+            <p class="idea-body-en">Iranian travel agencies issue tickets in Sepehr or Moghim GDS — then operators manually copy the output into NIARA agency management software. I built an RPA bot that reads the issuance output the moment a ticket is issued and registers it in NIARA instantly — zero delay, zero manual re-entry, zero transcription errors. Built with Python + Selenium/Playwright. Measurable ROI: saves 2–4 minutes per ticket across every operator shift.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="live" data-geo="global" data-page="1">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·11</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">Amadeus Navitaire Stratos — پلتفرم رتیلینگ هوشمند</div>
+              <div class="idea-title-en">Amadeus Navitaire Stratos · AI-Powered Retailing</div>
+              <div class="idea-badges">
+                <span class="badge badge-live"><span class="badge-dot"></span>اجرا شده</span>
+                <span class="badge badge-amadeus">Amadeus</span>
+                <span class="badge badge-global">جهانی</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">آمادئوس یه پلتفرم ابری بومی به اسم Navitaire Stratos راه‌اندازی کرده که ایرلاین‌ها رو از سیستم‌های رزرو قدیمی به دنیای Offer &amp; Order مدرن منتقل می‌کنه. ولوتئا اولین ایرلاینی بود که این پلتفرم رو راه‌اندازی کرد. این مدل آینده‌ی GDS هست.</p>
+            <p class="idea-body-en">Amadeus Navitaire Stratos: cloud-native, AI-powered PSS (Passenger Service System) enabling airlines to build personalized offers and process orders — replacing legacy booking classes with dynamic, attribute-based retailing. Volotea was first to go live. This is the post-GDS era in production.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="live" data-geo="global" data-page="1">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·12</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">Amadeus Max — لایه دستیار AI روی تمام محصولات</div>
+              <div class="idea-title-en">Amadeus Max · Cross-Product AI Assistant Layer</div>
+              <div class="idea-badges">
+                <span class="badge badge-live"><span class="badge-dot"></span>اجرا شده</span>
+                <span class="badge badge-amadeus">Amadeus</span>
+                <span class="badge badge-global">جهانی</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">آمادئوس یه لایه AI به اسم "Amadeus Max" راه‌اندازی کرده که مثل یه دستیار هوشمند روی تمام محصولاتش کار می‌کنه و workflow های cross-product رو اتوماتیک می‌کنه. از تحلیل Revenue Management تا مدیریت Hospitality — همه با یه رابط conversational.</p>
+            <p class="idea-body-en">Amadeus Max: an AI assistant layer that sits across Amadeus's entire product suite, enabling natural-language interaction with revenue management, property management, distribution, and analytics tools. Operators query complex cross-system data through conversation instead of dashboards. This is live and expanding across the Amadeus ecosystem.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- PAGE 2 -->
+
+      <div class="idea-card" data-status="live" data-geo="global" data-page="2">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·13</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">ترکیش ایر · سیستم بیومتریک پرواز داخلی</div>
+              <div class="idea-title-en">Turkish Airlines · Biometric Domestic Journey</div>
+              <div class="idea-badges">
+                <span class="badge badge-live"><span class="badge-dot"></span>اجرا شده</span>
+                <span class="badge badge-turkish">Turkish Airlines</span>
+                <span class="badge badge-global">جهانی</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">ترکیش ایر یه سیستم سفر بیومتریک راه‌اندازی کرده که مسافران ثبت‌نامی می‌تونن در پروازهای داخلی ترکیه بدون نشون دادن پاسپورت یا کارت پرواز صرفاً با چهره‌شون پرواز کنن. هدف: جزء سه ایرلین برتر دنیا در تجربه دیجیتال بودن تا ۲۰۳۳.</p>
+            <p class="idea-body-en">Turkish Airlines Technology launched a full biometric journey on domestic Turkish flights. Enrolled passengers move through check-in, baggage drop, and boarding using facial recognition — zero documents shown. Turkish Technology's 1,500-person R&D hub drives this. Target: top-3 global airline for digital passenger experience by 2033.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="wip" data-geo="global" data-page="2">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·14</span><span class="stub-dot pulse"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">ترکیش ایر · چت‌بات چندوجهی مسافر</div>
+              <div class="idea-title-en">Turkish Airlines · Multimodal Passenger Chatbot</div>
+              <div class="idea-badges">
+                <span class="badge badge-wip"><span class="badge-dot"></span>در حال اجرا</span>
+                <span class="badge badge-turkish">Turkish Airlines</span>
+                <span class="badge badge-global">جهانی</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">ترکیش ایر در حال استقرار یک چت‌بات چندوجهی (متن + صدا + تصویر) هست که از AI پیشرفته برای پشتیبانی مسافران در تمام کانال‌ها استفاده می‌کنه — از رزرو تا شکایت. هدف جایگزینی ۷۰٪ تماس‌های call center بدون افت کیفیت.</p>
+            <p class="idea-body-en">Turkish Technology is deploying a multimodal AI chatbot (text, voice, image) to handle passenger support across all channels. The system understands flight documents, boarding passes, and spoken queries in 30+ languages. Target: replace 70% of call center volume while maintaining CSAT. Part of their $2.32B digital investment initiative.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="wip" data-geo="global" data-page="2">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·15</span><span class="stub-dot pulse"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">ترکیش ایر · مرکز داده‌ی استانبول و ستون دیجیتال</div>
+              <div class="idea-title-en">Turkish Airlines · Istanbul Data Centre Infrastructure</div>
+              <div class="idea-badges">
+                <span class="badge badge-wip"><span class="badge-dot"></span>در حال اجرا</span>
+                <span class="badge badge-turkish">Turkish Airlines</span>
+                <span class="badge badge-global">جهانی</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">ترکیش ایر داره یه مرکز داده‌ی اختصاصی در استانبول می‌سازه که ستون فقرات دیجیتال عملیات ایرلاین خواهد بود. این زیرساخت قراره ۲۰۲۷-۲۸ راه‌اندازی بشه و به ایرلاین اجازه میده داده‌های AI و عملیاتی رو sovereign نگه داره — بدون وابستگی به cloud های خارجی.</p>
+            <p class="idea-body-en">Turkish Airlines is investing in a sovereign Istanbul Data Centre as digital backbone for operational continuity — planned for 2027-2028. Enables on-premise AI processing, reduces cloud dependency, and supports compliance with Turkish data localization laws. Part of a broader $2.32B multi-year infrastructure initiative including an E-Commerce Complex entering service in 2026.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="live" data-geo="global" data-page="2">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·16</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">مقاله: تقاضاپیشی با ترکیب ML و مدل تحلیلی</div>
+              <div class="idea-title-en">Research: Hybrid Demand Forecasting — Amadeus / AGIFORS</div>
+              <div class="idea-badges">
+                <span class="badge badge-live"><span class="badge-dot"></span>منتشر شده</span>
+                <span class="badge badge-research">مقاله</span>
+                <span class="badge badge-amadeus">Amadeus</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">در تیم آمادئوس روی ترکیب مدل‌های تحلیلی کلاسیک Revenue Management با Machine Learning کار کردیم تا دقت پیش‌بینی تقاضا رو به‌طور معناداری بالا ببریم — مخصوصاً برای مسیرهایی که داده‌های تاریخی کمی دارن. نتیجه این تحقیق در Journal of Revenue and Pricing Management منتشر شد و در AGIFORS RM Study Group 2024 هم ارائه دادیم.</p>
+            <p class="idea-body-en">Research I contributed to within the Amadeus team: combining classical analytical Revenue Management models with ML to significantly improve demand forecasting accuracy — especially for sparse-data routes. Published in Journal of Revenue and Pricing Management (Nanty, Fiig et al., 2025). Also presented "Application of Generative AI for Airline Demand Forecasting" at AGIFORS RM Study Group 2024. This work directly shapes how Amadeus RMS handles low-frequency routes.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="live" data-geo="global" data-page="2">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·17</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">مقاله: قیمت‌گذاری پویا در دقایق پایانی — Reinforcement Learning</div>
+              <div class="idea-title-en">Research: Last-Minute Dynamic Pricing via RL</div>
+              <div class="idea-badges">
+                <span class="badge badge-live"><span class="badge-dot"></span>منتشر شده</span>
+                <span class="badge badge-research">مقاله</span>
+                <span class="badge badge-global">جهانی</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">یکی از حوزه‌هایی که در آمادئوس روش کار کردیم، قیمت‌گذاری پویا در ساعات و دقایق پایانی پروازه. مدل‌های Reinforcement Learning می‌تونن نرخ رو دقیقه‌ای آپدیت کنن — قوی‌ترین lever درآمدی که ایرلاین‌ها الان دارن. Delta با شرکت Fetcherr دقیقاً همین مسیر رو رفته و ۲۰٪ از نرخ‌گذاری‌هاش رو به AI واگذار می‌کنه.</p>
+            <p class="idea-body-en">An area I've worked on within Amadeus: last-minute dynamic pricing using Reinforcement Learning — where bid prices update minute-by-minute as remaining inventory and demand signals shift. Academic backing: IJFMR 2025, Bondoux et al. 2020 (Amadeus Research). Delta Airlines operationalized this commercially with Fetcherr, targeting 20% AI-controlled fares by end of 2025. Regulatory pushback on "surveillance pricing" is also something we tracked closely (EU Commission 2024).</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="live" data-geo="global" data-page="2">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·18</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">مقاله: آیا RMS از تحول Offer/Order جان سالم به در می‌بره؟</div>
+              <div class="idea-title-en">Research: Will RMS Survive the Offer/Order Transformation?</div>
+              <div class="idea-badges">
+                <span class="badge badge-live"><span class="badge-dot"></span>منتشر شده</span>
+                <span class="badge badge-research">مقاله</span>
+                <span class="badge badge-amadeus">Amadeus</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">یکی از بحث‌های مهمی که در آمادئوس روش کار کردیم اینه که وقتی ایرلاین‌ها به مدل Offer &amp; Order مدرن می‌رن، سیستم‌های سنتی Revenue Management چه سرنوشتی دارن. این تحقیق در AGIFORS RM Study Group 2025 ارائه شد و مستقیماً روی roadmap محصولات آمادئوس تأثیر گذاشت.</p>
+            <p class="idea-body-en">Research I was part of at Amadeus: examining whether legacy RMS architectures survive the Offer/Order transformation — where airlines no longer sell booking classes but dynamically construct individualized offers per passenger. Presented at AGIFORS RM Study Group 2025 (Fiig, Wittman, Trescases). The findings directly influenced Amadeus product roadmap decisions around the next generation of revenue management systems.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="iran" data-page="2">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·19</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">موتور خلاصه‌سازی بلیط با GenAI برای آژانس‌های ایران</div>
+              <div class="idea-title-en">GenAI Ticket Summarizer for Iranian Travel Agencies</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">ابزاری که اپراتورهای آژانس بتونن فایل PNR یا تصویر بلیط رو آپلود کنن و خلاصه فارسی کامل همراه با هشدارهای مهم (تاریخ انقضا، شرایط استرداد، لایه‌های وزن بار) به صورت خودکار دریافت کنن — بدون نیاز به خوندن کدهای GDS.</p>
+            <p class="idea-body-en">Tool where Iranian agency operators upload a PNR file or ticket image and receive an auto-generated Persian summary: fare conditions, refund rules, baggage allowances, ticketing deadlines, transit visa requirements. Eliminates GDS command expertise as bottleneck. Powered by LLM + OCR pipeline. Gap in the market: no one has built this for the Iranian travel agency stack.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="global" data-page="2">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·20</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">داشبورد real-time مانیتورینگ نرخ رقبا</div>
+              <div class="idea-title-en">Competitor Fare Intelligence Dashboard</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-global">جهانی</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">داشبوردی که نرخ بلیط تمام رقبا روی مسیرهای هدف رو در real-time رصد می‌کنه و وقتی اختلاف قیمت از آستانه مشخصی رد شد آلرت می‌فرسته. مدیران Revenue Management دیگه نیازی به مقایسه دستی ندارن — سیستم خودش می‌گه «رقیب نرخت رو ۱۵٪ پایین آورد.»</p>
+            <p class="idea-body-en">Real-time fare intelligence platform: scrapes competitor pricing across target routes, tracks price movements over 24/48/72hr windows, and fires alerts when differential thresholds are breached. Revenue managers react in minutes, not days. Stack: Python scrapers + FastAPI + WebSocket + React dashboard. High commercial value, especially for routes where pricing volatility is extreme.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="global" data-page="2">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·21</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">پیش‌بینی نرخ بلیط با LSTM برای مسافر</div>
+              <div class="idea-title-en">Passenger-Facing Fare Prediction with LSTM</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-global">جهانی</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">ابزاری برای مسافر که قیمت بلیط رو روی یه مسیر مشخص رصد کنه و با مدل LSTM پیش‌بینی کنه آیا قیمت طی ۷/۱۴/۳۰ روز آینده بالا یا پایین می‌ره. مسافر می‌دونه الان بخره یا صبر کنه — به جای حدس زدن.</p>
+            <p class="idea-body-en">Consumer-facing fare prediction engine: LSTM model trained on historical fare data for specific O&D pairs, giving passengers a "buy now / wait" recommendation with confidence score. Tracks patterns like pre-holiday surges, seat availability decay curves, and competitor promotions. Think Google Flights price prediction — but built for Middle Eastern routes where existing tools have poor coverage.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- PAGE 3 -->
+
+      <div class="idea-card" data-status="idea" data-geo="iran" data-page="3">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·22</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">سیستم تشخیص تقلب در صدور بلیط با ML</div>
+              <div class="idea-title-en">Ticket Fraud Detection Engine — ML-Powered</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">مدلی که الگوهای غیرعادی در صدور بلیط رو شناسایی می‌کنه: ترنسکشن‌های بیش از حد سریع، خریدهای از IP مشکوک، تکرار مشخصات مسافر با هویت‌های مختلف، یا رزرو-استرداد سریال‌وار برای قفل کردن صندلی. آب واقعی بازار ایران رو داره.</p>
+            <p class="idea-body-en">Anomaly detection system for Iranian ticket issuance: identifies fraudulent patterns including rapid-fire transactions, seat-blocking via reserve-cancel loops, identity recycling across PNRs, and agency-level churning. Model: Isolation Forest + LSTM on behavioral sequences. Real commercial need — Iranian travel agencies lose significant revenue to these patterns annually.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="global" data-page="3">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·23</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">پنل تحلیل سودآوری مسیر برای آژانس‌های کوچک</div>
+              <div class="idea-title-en">Route Profitability Analytics for Small Agencies</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-global">جهانی</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">داشبوردی که آژانس‌های کوچک بتونن بفهمن کدام مسیرها، کدام ایرلاین‌ها، و کدام بازه‌های زمانی برای آن‌ها بیشترین کمیسیون و سود خالص رو داشته. جای خالیش حس می‌شه — تحلیل‌های مالی صنعت الان فقط برای شرکت‌های بزرگ ساخته شدن.</p>
+            <p class="idea-body-en">Profitability analytics SaaS for small-to-mid travel agencies: breaks down revenue per route, per airline, per booking class, and per agent. Identifies which GDS fare families generate highest net yield after override commissions. Visualized as interactive Sankey charts and trend lines. Currently, this analysis is manual Excel work for 90% of agencies — a clear automation opportunity.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="iran" data-page="3">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·24</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">موتور بسته‌بندی هوشمند بلیط + هتل + ترانسفر</div>
+              <div class="idea-title-en">AI Package Bundler — Flight + Hotel + Transfer</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">موتوری که از داده‌های تاریخی رزرو، مقصد، و پروفایل مشتری، بسته‌های ترکیبی (بلیط + هتل + ترانسفر + تور اختیاری) رو به صورت خودکار می‌سازه و قیمت‌گذاری می‌کنه. به آژانس‌ها اجازه می‌ده بدون تیم محصول، پکیج‌های جذاب بفروشن.</p>
+            <p class="idea-body-en">Dynamic packaging engine: combines available flight fares, hotel rates (via Amadeus Hotel Search API), and ground transfer data into optimized bundles priced below sum-of-parts. Rules engine learns which combinations convert best per customer segment. Agencies deploy it as a white-label booking widget — no product team required.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="global" data-page="3">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·25</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">سیستم هشدار اتوماتیک شرایط استرداد بلیط</div>
+              <div class="idea-title-en">Ticket Refund Rule Alert & Monitoring System</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-global">جهانی</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">سیستمی که تمام بلیط‌های صادره یه آژانس رو رصد می‌کنه و قبل از رسیدن به deadline‌های استرداد، تغییر نام، یا Void، آلرت خودکار می‌فرسته. هر بلیط یه «ساعت شمارش معکوس» داره — اپراتور دیگه چیزی رو از دست نمی‌ده.</p>
+            <p class="idea-body-en">Automated monitoring system for issued tickets: parses fare rules from GDS, extracts refund/exchange/void deadlines, and sends tiered alerts (48hr, 24hr, 2hr before expiry) via Telegram or email. Each ticket gets a live countdown. Prevents costly missed windows — a daily pain point in Iranian agencies that's never been systematically solved.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="iran" data-page="3">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·26</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">داشبورد BI عملکرد اپراتورهای آژانس</div>
+              <div class="idea-title-en">Agency Operator Performance BI Dashboard</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">داشبوردی برای مدیران آژانس که عملکرد هر اپراتور رو بر اساس تعداد بلیط صادره، ارزش ریالی تراکنش، نرخ خطا، و زمان پاسخ به مشتری بسنجه. مدیران الان این داده‌ها رو ندارن — فقط حدس می‌زنن کدوم اپراتور بهتره.</p>
+            <p class="idea-body-en">BI dashboard for agency managers: tracks each operator's ticket issuance volume, transaction value, error rate (void/refund patterns), and response-time to customer queries. Surfaces top performers and flags at-risk operators before problems escalate. Built with Python + FastAPI + React/Recharts. Fills a management intelligence gap that affects every mid-size Iranian travel agency.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="global" data-page="3">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·27</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">موتور اتوماتیک گزارش BSP و تطبیق مالی</div>
+              <div class="idea-title-en">Automated BSP Reconciliation & Financial Report Engine</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-global">جهانی</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">ابزاری که گزارش‌های BSP (Billing and Settlement Plan) IATA رو به صورت خودکار پارس می‌کنه، با سیستم حسابداری داخلی آژانس تطبیق می‌ده، و مغایرت‌ها رو فلگ می‌کنه. کاری که الان ۲ روز کار دستی می‌گیره، در ۵ دقیقه انجام می‌ده.</p>
+            <p class="idea-body-en">Automated BSP reconciliation engine: ingests IATA BSP billing files, cross-references with internal issuance records, flags discrepancies (overbillings, missed commissions, ADM alerts), and generates audit-ready reports. A task that takes 2 days of manual work per billing cycle — automated to minutes. High ROI, clear commercial value for any IATA-accredited agency.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="iran" data-page="3">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·28</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">پیشنهاد مسیر جایگزین در زمان ایرراپشن</div>
+              <div class="idea-title-en">AI Alternative Routing During Airline Disruptions</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">وقتی یه پرواز کنسل یا دیلی می‌شه، سیستم فوری بهترین مسیرهای جایگزین رو با در نظر گرفتن هزینه، زمان کل، تعداد توقف، و اعتبار بلیط اصلی پیدا می‌کنه. اپراتور آژانس الان این کار رو دستی و استرس‌زا انجام می‌ده — AI این کار رو در ثانیه‌ها حل می‌کنه.</p>
+            <p class="idea-body-en">Disruption management tool: when a flight is cancelled or significantly delayed, the system auto-generates ranked alternative routings respecting original ticket validity, rebooking rules, and fare conditions. Operator gets a shortlist in seconds instead of manually querying GDS for 30 minutes. Integrates with Amadeus Disruption Management APIs and Iranian GDS feeds.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="global" data-page="3">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·29</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">API پیش‌بینی تقاضای مسیر برای آژانس‌های حجم‌دار</div>
+              <div class="idea-title-en">Route Demand Forecast API for High-Volume Agencies</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-global">جهانی</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">یه API که آژانس‌های حجم‌دار بتونن SubscrIbe کنن و پیش‌بینی تقاضای ۳۰/۶۰/۹۰ روزه رو بر اساس مسیرهاشون دریافت کنن. به آن‌ها کمک می‌کنه چارتر رزرو کنن، اعتبار پیش‌خرید کنن، یا موجودی نگه دارن — قبل از اینکه نرخ‌ها بالا بره.</p>
+            <p class="idea-body-en">Subscription API delivering route-level demand forecasts (30/60/90 day windows) to high-volume travel agencies. Agencies use forecasts to pre-purchase charter blocks, lock bulk fares, or hold inventory before peak demand drives prices up. Model: ensemble of SARIMA + gradient boosting trained on historical booking curves. Data moat builds over time — higher accuracy for subscribers who contribute booking signals.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="iran" data-page="3">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·30</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">سیستم اتوماسیون QC بلیط قبل از صدور نهایی</div>
+              <div class="idea-title-en">Pre-Issuance Ticket Quality Control Automation</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">قبل از اینکه اپراتور دکمه‌ی «صدور» رو بزنه، یه لایه QC خودکار روی PNR چک می‌کنه: اسم با پاسپورت تطابق داره؟ مسیر فیزیکی درسته؟ ویزای ترانزیت لازمه؟ بار مجاز چقدره؟ خطاهای رایج قبل از صدور جلوگیری می‌کنه.</p>
+            <p class="idea-body-en">Pre-ticketing QC layer: runs automated checks on every PNR before issuance — name format compliance (IATA standards), transit visa requirements by nationality, minimum connection time validation, baggage policy lookup, passport expiry vs travel date. Catches errors that generate costly ADMs or stranded passengers. Integrates as a middleware check before the GDS ticketing command fires.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="global" data-page="3">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·31</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">پلتفرم وفاداری white-label برای آژانس‌های مستقل</div>
+              <div class="idea-title-en">White-Label Loyalty Platform for Independent Travel Agencies</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-global">جهانی</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">ایرلاین‌های بزرگ سیستم‌های وفاداری پیچیده دارن — آژانس‌های مستقل ندارن. یه SaaS که آژانس‌ها بتونن برای مشتریانشون امتیاز، سطح عضویت، و پاداش سفر تعریف کنن. مشتری وفادار به آژانس، نه به ایرلاین — یه تغییر پارادایم در صنعت.</p>
+            <p class="idea-body-en">White-label loyalty SaaS for independent travel agencies: lets agencies create points-per-booking programs, tier memberships, and travel rewards without building infrastructure from scratch. Customers become loyal to the agency rather than bypassing it to book direct with airlines. Gamification layer (streak bonuses, birthday upgrades) increases repeat bookings 20-30% in comparable programs. Market gap: no one has built this specifically for MENA/Iranian market agencies.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- PAGE 4 -->
+
+      <div class="idea-card" data-status="wip" data-geo="global" data-page="4">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·32</span><span class="stub-dot pulse"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">سامانه آنلاین رزرو هتل‌های نجف و کربلا</div>
+              <div class="idea-title-en">Iraq Holy Cities Hotel Booking Platform — Najaf &amp; Karbala</div>
+              <div class="idea-badges">
+                <span class="badge badge-wip"><span class="badge-dot"></span>در حال اجرا</span>
+                <span class="badge badge-global">عراق</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">در عراق برخلاف ایران (که اقامت۲۴ و امثالش رزرو هتل رو حل کردن) هیچ سامانه متمرکزی برای رزرو آنلاین وجود نداره — هتل‌های نجف و کربلا هنوز با تماس تلفنی، واتس‌اپ، یا واسطه‌های آفلاین کار می‌کنن و همین باعث overbooking، نبود شفافیت قیمت، و سردرگمی زائر می‌شه. طراحی فنی: یه Channel Manager به‌عنوان هسته مرکزی که موجودی و نرخ هر هتل رو با قفل atomic مدیریت می‌کنه تا دو رزرو هم‌زمان روی یه اتاق ننشینن، یه پنل مدیریت برای هتل‌دار (تقویم موجودی، نوع اتاق، نرخ فصلی ایام اربعین/محرم)، و یه موتور رزرو سمت زائر با UI سه‌زبانه (عربی/فارسی/انگلیسی). لحظه‌ای که رزرو confirm می‌شه، هتل از طریق push notification و پیامک خبردار می‌شه — چون خیلی از مالکین هتل گوشی هوشمند یا اینترنت پایدار ندارن.</p>
+            <p class="idea-body-en">Iraq's holy cities (Najaf, Karbala) have no centralized hotel-distribution layer — unlike Iran's Eghamat24-style OTAs, properties still run on phone calls and offline brokers, leading to chronic overbooking during peak pilgrimage windows (Arbaeen sees 15–20M pilgrims). Core architecture: a multi-tenant Channel Manager service sitting between hotel inventory and the booking engine, using Redis-backed distributed locks (or Postgres SELECT...FOR UPDATE) per room-night to guarantee booking idempotency under concurrent requests — the hardest technical problem in any hotel-booking system. Components: (1) Hotel Admin Service — availability calendar, rate plans, room-type taxonomy, seasonal pricing for high-demand events; (2) Guest Booking Engine — search/filter by proximity to the shrines, Arabic/Persian/English i18n, RTL-first frontend; (3) Notification Service — WebSocket + SMS gateway (Zain Iraq/Asiacell + Kavenegar for Iranian guests) firing the instant a booking is confirmed, since many small properties have no internet-connected front desk; (4) Payments — local cash-on-arrival/agent settlement flow as a fallback given Iran-Iraq banking/SWIFT restrictions, alongside Iraqi card rails where available. Stack: Django REST Framework or FastAPI + PostgreSQL + Redis (locks + pub/sub) + Celery for async SMS/notification jobs + React/Next.js frontend. Revenue model: per-booking commission or monthly SaaS subscription per property.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="wip" data-geo="iran" data-page="4">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·33</span><span class="stub-dot pulse"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">پلتفرم سفرساز انفرادی زیارت — بدون کاروان</div>
+              <div class="idea-title-en">Self-Planned Pilgrimage Travel Platform — Independent Ziyarat</div>
+              <div class="idea-badges">
+                <span class="badge badge-wip"><span class="badge-dot"></span>در حال اجرا</span>
+                <span class="badge badge-iran">ایران</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">اکثر زائران ایرانی به نجف و کربلا فقط از طریق کاروان‌های گروهی می‌رن — چون هیچ ابزاری برای برنامه‌ریزی انفرادی وجود نداره و زائر مجبوره برنامه و سرعت گروه رو قبول کنه. یه پلتفرم ماژولار می‌خوام بسازم شبیه «بساز سفر خودتو»: کاربر جدا جدا بلیط پرواز، هتل (متصل به همون لایه رزرو هتل‌های عراق)، ترانسفر زمینی بین شهرها/مرزها، و حتی مسیر بازدید از اماکن مقدس با زمان‌بندی و پیاده‌روی رو خودش انتخاب می‌کنه — هر کدوم به‌صورت سرویس جدا که با هم ارکستره می‌شن، نه یه پکیج بسته.</p>
+            <p class="idea-body-en">The Iranian pilgrimage market (Najaf, Karbala, Mashhad, Samarra) is almost entirely locked into group "karavan" packages — no independent, modular planning infrastructure exists, forcing pilgrims to accept group pace and fixed itineraries. Technical design: a microservices Trip Composer pattern where each leg is an independent bounded-context service — Flight Service (Sepehr/Amadeus API integration for domestic + Iran–Iraq routes), Hotel Service (reuses the holy-cities booking layer above), Ground Transfer Service (integration with local Iraqi/Iranian transport operators for Najaf↔Karbala↔border legs), and a Ziyarat Scheduler that sequences shrine visits against published visiting hours and historical crowd-density data to avoid bottlenecks at the shrines, especially around Arbaeen. An orchestration layer (e.g., Saga pattern over async message queue — RabbitMQ/Kafka) coordinates the multi-step booking so a failure in one leg (say, no hotel availability) triggers compensating rollback instead of leaving the user with a half-completed trip. A recommendation engine (collaborative filtering on historical booking data) suggests optimal date combinations to dodge peak-crowd days. Frontend: mobile-first PWA, Persian RTL, offline-tolerant for border areas with weak connectivity. Payments: Shaparak-integrated gateway on the Iran side, agent/cash settlement on the Iraq side given cross-border banking constraints. This fills the "self-planned pilgrimage" gap that no existing platform addresses for the 3M+ annual Iranian pilgrim market.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="idea-card" data-status="idea" data-geo="global" data-page="4">
+        <div class="idea-stub"><span class="stub-code mono">IDEA·34</span><span class="stub-dot"></span></div>
+        <div class="idea-main">
+          <div class="idea-header" onclick="toggleCard(this.parentElement.parentElement)">
+            <div class="idea-meta">
+              <div class="idea-title">پلتفرم چارتر و مدیریت اسناد حمل اموات به نجف</div>
+              <div class="idea-title-en">Deceased-Transport Charter &amp; Document-Workflow Platform — Najaf Burial</div>
+              <div class="idea-badges">
+                <span class="badge badge-idea"><span class="badge-dot"></span>ایده‌پردازی</span>
+                <span class="badge badge-global">عراق</span>
+              </div>
+            </div>
+            <div class="idea-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          </div>
+          <div class="idea-body"><div class="idea-body-inner">
+            <p class="idea-body-text">انتقال پیکر متوفی برای تدفین در قبرستان وادی‌السلام نجف یه بازار واقعی و فعاله، ولی کاملاً پراکنده و دستی‌ست: خانواده باید همزمان با اپراتور چارتر هوایی/زمینی، آرامستان نجف، و چندین نهاد صادرکننده مجوز (پزشکی قانونی، وزارت بهداشت، گمرک ایران، مجوز ورود عراق) به‌صورت جدا جدا و معمولاً تلفنی هماهنگ کنه — در شرایطی که خانواده داغدیده کمترین تحمل رو برای پیگیری اداری داره. ایده اینه که یه پلتفرم بسازم که این فرآیند رو به یه workflow وضعیت‌دار (state machine) تبدیل کنه: مرحله صدور مجوز، مرحله رزرو چارتر، مرحله ترخیص گمرکی، مرحله هماهنگی دفن — با اطلاع‌رسانی پیامکی شفاف به خانواده در هر مرحله، بدون نیاز به تماس مکرر.</p>
+            <p class="idea-body-en">Transporting deceased Iranian Shia for burial in Najaf's Wadi al-Salam — the world's largest cemetery — is a real, recurring logistics market, but it's entirely manual and fragmented: families must separately coordinate a charter operator (air cargo or refrigerated ground transport), the cemetery office in Najaf, and several permit-issuing bodies (coroner's report, Ministry of Health export clearance, Iranian customs, Iraqi import/entry permit) — typically by phone, during the worst possible time to manage paperwork. Technical design: a document-workflow platform modeling the process as an explicit state machine (permit-pending → permit-issued → charter-booked → customs-cleared → burial-scheduled → completed), with each transition gated on verified document upload (OCR-assisted validation of death certificates and permits) rather than free-form back-and-forth. A two-sided structure: a family-facing portal with a single real-time status tracker and proactive SMS/WhatsApp updates at every state transition, and an operator-facing dashboard for vetted charter providers and the Najaf cemetery office to confirm slots and update status. Stack: a workflow/BPMN-style state-machine engine (e.g., Camunda or a custom Postgres-backed state table) + document upload/OCR pipeline + notification service (SMS gateway dual-routed for Iran/Iraq carriers) + FastAPI/Django backend + React admin dashboards. The core value isn't matchmaking — it's collapsing a multi-institution bureaucratic process into one transparent, trackable pipeline during an extremely stressful time for families.</p>
+          </div></div>
+        </div>
+      </div>
+
+
+    </div><!-- end ideas-list -->
+
+    <!-- PAGINATION -->
+    <div class="pagination-wrap" id="pagination-wrap">
+      <button class="page-btn" id="prev-btn" onclick="goPage(currentPage - 1)" disabled>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        قبلی
+      </button>
+      <div class="page-dots" id="page-dots"></div>
+      <button class="page-btn" id="next-btn" onclick="goPage(currentPage + 1)">
+        بعدی
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+
+    <div style="margin-top:16px; text-align:center;">
+      <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:1px;" id="ideas-counter"></span>
+    </div>
+
+  </div>
+</section>
+
+<section class="career-section">
+  <div class="wrap">
+    <div class="section-header">
+      <div class="section-eyebrow">مسیر شغلی · Career Path</div>
+      <h2 class="section-title">از هواپیمایی العراقیه و ترکیش ایر تا آمادئوس</h2>
+    </div>
+    <div class="career-flights" id="career-flights">
+      <div class="flight-card" data-delay="0">
+        <div class="flight-node fn-iraqi">🇮🇶</div>
+        <div class="flight-content">
+          <div class="flight-phase">آغاز مسیر · First Chapter</div>
+          <div class="flight-company fc-iraqi">هواپیمایی العراقیه</div>
+          <div class="flight-company-en">IRAQI AIRWAYS · Baghdad</div>
+          <p class="flight-desc">اولین قدم در صنعت هوانوردی — آشنایی با سیستم‌های رزرو، زیرساخت فنی ایرلاین‌ها، و عملیات داده در خاورمیانه.</p>
+          <div class="flight-route">
+            <span class="fr-code">BGW</span>
+            <span class="fr-sep">──✈──</span>
+            <span class="fr-label">Baghdad · Middle East Aviation</span>
+          </div>
+        </div>
+      </div>
+      <div class="flight-card" data-delay="150">
+        <div class="flight-node fn-turkish">🇹🇷</div>
+        <div class="flight-content">
+          <div class="flight-phase">گام دوم · Second Chapter</div>
+          <div class="flight-company fc-turkish">ترکیش ایر</div>
+          <div class="flight-company-en">TURKISH AIRLINES · Istanbul</div>
+          <p class="flight-desc">ارتقا به یکی از بزرگ‌ترین ایرلاین‌های جهان — کار با GDS بین‌المللی، شبکه پروازی گسترده، و تیم‌های چندملیتی.</p>
+          <div class="flight-route">
+            <span class="fr-code">IST</span>
+            <span class="fr-sep">──✈──</span>
+            <span class="fr-label">Istanbul · Global Network</span>
+          </div>
+        </div>
+      </div>
+      <div class="flight-card" data-delay="300">
+        <div class="flight-node fn-amadeus">✦</div>
+        <div class="flight-content">
+          <div class="flight-phase">اکنون · NOW</div>
+          <div class="flight-company fc-amadeus">Amadeus IT Group</div>
+          <div class="flight-company-en">AMADEUS · Madrid / Remote</div>
+          <p class="flight-desc">در قلب تکنولوژی سفر جهانی — سیستم‌هایی که پشتیبان رزرو بیش از ۱.۸ میلیارد مسافر در سال هستن.</p>
+          <div class="flight-route">
+            <span class="fr-code">MAD</span>
+            <span class="fr-sep">──✦──</span>
+            <span class="fr-label">Madrid · Travel Tech HQ</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-divider"></div>
+  <div class="footer-inner">
+    <div class="footer-name">PEYMAN</div>
+    <div class="footer-status">
+      <span class="status-dot-live status-dot-pulse"></span>
+      معمار فناوری سفر · Amadeus IT Group
+    </div>
+    <div class="footer-links">
+      <a class="footer-link" href="#">Python</a>
+      <a class="footer-link" href="#">Amadeus APIs</a>
+      <a class="footer-link" href="#">Travel Tech</a>
+      <a class="footer-link" href="#">GDS · NDC</a>
+    </div>
+    <div class="footer-copy">Built by Peyman · Travel Tech &amp; Ideas</div>
+  </div>
+</footer>
+
+<script>
+  const ITEMS_PER_PAGE = 10;
+  let currentPage = 1;
+  let activeFilter = 'all';
+
+  function getAllCards() {
+    return Array.from(document.querySelectorAll('.idea-card'));
+  }
+
+  function getVisibleCards() {
+    return getAllCards().filter(card => {
+      if (activeFilter === 'all') return true;
+      const status = card.dataset.status;
+      const geo = card.dataset.geo;
+      if (activeFilter === 'live') return status === 'live';
+      if (activeFilter === 'wip') return status === 'wip';
+      if (activeFilter === 'idea') return status === 'idea';
+      if (activeFilter === 'iran') return geo === 'iran';
+      if (activeFilter === 'global') return geo === 'global';
+      return true;
+    });
+  }
+
+  function renderPage(page) {
+    currentPage = page;
+    const visible = getVisibleCards();
+    const total = visible.length;
+    const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
+    const start = (page - 1) * ITEMS_PER_PAGE;
+    const end = start + ITEMS_PER_PAGE;
+
+    getAllCards().forEach(c => {
+      c.style.display = 'none';
+      c.classList.remove('open');
+      const body = c.querySelector('.idea-body');
+      if (body) body.classList.remove('open');
+    });
+
+    visible.forEach((card, i) => {
+      if (i >= start && i < end) card.style.display = '';
+    });
+
+    // Pagination dots
+    const dotsEl = document.getElementById('page-dots');
+    dotsEl.innerHTML = '';
+    for (let p = 1; p <= totalPages; p++) {
+      const dot = document.createElement('button');
+      dot.className = 'page-dot' + (p === page ? ' active' : '');
+      dot.textContent = p;
+      dot.onclick = () => goPage(p);
+      dotsEl.appendChild(dot);
+    }
+
+    document.getElementById('prev-btn').disabled = page <= 1;
+    document.getElementById('next-btn').disabled = page >= totalPages;
+
+    const counter = document.getElementById('ideas-counter');
+    counter.textContent = `${Math.min(end, total)} / ${total} IDEA`;
+
+    // Show/hide pagination if only 1 page
+    document.getElementById('pagination-wrap').style.display = totalPages <= 1 ? 'none' : 'flex';
+  }
+
+  function goPage(page) {
+    const visible = getVisibleCards();
+    const totalPages = Math.ceil(visible.length / ITEMS_PER_PAGE);
+    if (page < 1 || page > totalPages) return;
+    renderPage(page);
+    document.querySelector('.ideas-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function toggleCard(card) {
+    const body = card.querySelector('.idea-body');
+    const isOpen = card.classList.contains('open');
+    getAllCards().forEach(c => {
+      c.classList.remove('open');
+      const b = c.querySelector('.idea-body');
+      if (b) b.classList.remove('open');
+    });
+    if (!isOpen) {
+      card.classList.add('open');
+      body.classList.add('open');
+    }
+  }
+
+  function filterIdeas(filter, btn) {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = filter;
+    renderPage(1);
+  }
+
+  // Flight cards scroll-reveal
+  const flightCards = document.querySelectorAll('.flight-card');
+  const flightObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const delay = parseInt(entry.target.dataset.delay || 0);
+        setTimeout(() => entry.target.classList.add('visible'), delay);
+        flightObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  flightCards.forEach(c => flightObserver.observe(c));
+
+  // Init
+  renderPage(1);
+</script>
+</body>
+</html>
