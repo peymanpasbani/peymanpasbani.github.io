@@ -417,8 +417,7 @@ async function run(){
   // ── S5: END (15–16s) ──
   await fadeOut(); showScene('s5'); setPD(4)
   $('gm').style.opacity='0';$('ga').style.transition='opacity 1.5s';$('ga').style.opacity='1'
-  const sp=$('et').querySelector('span')
-  sp.style.animation='none';sp.style.opacity='0';sp.style.transform='translateY(100%)'
+  sp.style.transition='none';sp.style.opacity='0';sp.style.transform='translateY(100%)'
   $('esub').style.opacity='0';$('ebar').style.opacity='0';$('efill').style.width='0%';$('rbtn').style.opacity='0'
   await fadeIn()
   await sleep(100)
