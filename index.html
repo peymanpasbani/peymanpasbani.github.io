@@ -100,6 +100,9 @@
   .hero-name { font-size: clamp(52px, 14vw, 96px); font-weight: 900; line-height: 0.92; letter-spacing: -2px; color: var(--text); overflow: visible; pointer-events: none; }
   .hero-name-line { display: block; overflow: hidden; pointer-events: none; }
   .hero-name-line span { display: block; opacity: 0; transform: translateY(100%); animation: slide-up 0.65s cubic-bezier(0.16,1,0.3,1) forwards; pointer-events: none; }
+  /* allow girl characters to receive clicks despite parent pointer-events:none */
+  .girls-row { pointer-events: all !important; }
+  .girl-char { pointer-events: all !important; }
   .hero-name-line:nth-child(1) span { animation-delay: 0.18s; }
   .hero-name-en { font-family: 'JetBrains Mono', monospace; font-size: clamp(11px, 2.5vw, 15px); letter-spacing: 5px; color: var(--amber); text-transform: uppercase; direction: ltr; margin-top: 14px; opacity: 0; animation: fade-up 0.5s ease forwards 0.45s; }
 
@@ -1723,14 +1726,17 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
 </style>
 
 <script>
-  // click handlers on girl chars — must run AFTER modal HTML is in the DOM
-  document.querySelectorAll('.girl-char').forEach(el => {
-    el.style.cursor = 'pointer';
-    el.addEventListener('click', () => {
-      const key = el.classList.contains('parand') ? 'parand' : 'noura';
-      openGirlBox(key);
+  // Girl click handlers — placed AFTER modal HTML so all elements exist in DOM
+  // Also runs after animation delay so opacity is no longer 0
+  setTimeout(function() {
+    document.querySelectorAll('.girl-char').forEach(function(el) {
+      el.style.cursor = 'pointer';
+      el.addEventListener('click', function() {
+        var key = el.classList.contains('parand') ? 'parand' : 'noura';
+        openGirlBox(key);
+      });
     });
-  });
+  }, 700);
 </script>
 </body>
 </html>
