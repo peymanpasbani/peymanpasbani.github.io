@@ -169,7 +169,7 @@
   .girl-char.noura .girl-name-tag { background: #B06BFF; }
   .girl-char.noura .girl-name-tag::after { border-top: 6px solid #B06BFF; }
 
-  .girl-svg { width: 54px; height: 54px; }
+  .girl-svg { width: 64px; height: 64px; }
 
   /* Parand bounces gently */
   @keyframes parand-bounce {
@@ -408,7 +408,7 @@
     <div class="hero-terminal">
       <span class="hero-terminal-prompt">peyman@amadeus:~$ whoami<span class="hero-terminal-cursor"></span></span>
     </div>
-    <span class="girls-row" style="position:fixed; bottom:24px; right:24px; opacity:0; animation:fade-up 0.6s ease forwards 0.5s; z-index:200; pointer-events:all;">
+    <span class="girls-row" style="position:fixed; bottom:24px; right:24px; z-index:200; pointer-events:all; background:rgba(255,0,0,0.1); padding:8px; border-radius:12px;">
           <!-- Parand -->
           <span class="girl-char parand" onclick="openGirlBox('parand')" style="cursor:pointer;">
             <span class="girl-name-tag">Parand 🦋</span>
@@ -1499,8 +1499,8 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
 </script>
 
 <!-- GIRL MEMORY MODAL -->
-<div id="girl-overlay" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(10,20,30,0.7); backdrop-filter:blur(6px); transition:opacity 0.3s ease; opacity:0; pointer-events:none;">
-  <div id="girl-modal" style="--gc:#FF6BB5; --gcs:#FFF0F7; --gcb:#FFB3D9; --gct:#C0337A; position:relative; width:min(340px,90vw); border-radius:24px; background:#fff; border:2px solid var(--gcb); box-shadow:0 20px 60px -10px rgba(0,0,0,0.4), 0 0 0 1px var(--gcb); overflow:hidden; transition:transform 0.3s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease; transform:scale(0.88) translateY(20px); opacity:0;">
+<div id="girl-overlay" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(10,20,30,0.7); backdrop-filter:blur(6px); transition:opacity 0.3s ease;">
+  <div id="girl-modal" style="--gc:#FF6BB5; --gcs:#FFF0F7; --gcb:#FFB3D9; --gct:#C0337A; position:relative; width:min(340px,90vw); border-radius:24px; background:#fff; border:2px solid var(--gcb); box-shadow:0 20px 60px -10px rgba(0,0,0,0.4), 0 0 0 1px var(--gcb); overflow:hidden; transition:transform 0.3s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease; transform:scale(0.88) translateY(20px);">
 
     <!-- header -->
     <div style="background:linear-gradient(135deg, var(--gc), color-mix(in srgb, var(--gc) 70%, #fff)); padding:20px 20px 16px; text-align:center; position:relative;">
@@ -1554,7 +1554,9 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
 </div>
 
 <style>
+  #girl-overlay { opacity: 0; pointer-events: none; }
   #girl-overlay.show { opacity: 1; pointer-events: all; }
+  #girl-modal { opacity: 0; }
   #girl-modal.show { transform: scale(1) translateY(0); opacity: 1; }
   @keyframes shake {
     0%,100% { transform: scale(1) translateX(0); }
@@ -1630,6 +1632,7 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
   let unlocked = { parand: false, noura: false };
 
   window.openGirlBox = function(girlKey) {
+    console.log("openGirlBox called:", girlKey);
     activeGirl = girlKey;
     pinAttempts = 0;
     const cfg = CONFIG[girlKey];
