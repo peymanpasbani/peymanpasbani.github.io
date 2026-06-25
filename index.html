@@ -1542,6 +1542,13 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
       </div>
     </div>
 
+    <!-- GREETING SCREEN -->
+    <div id="gm-greeting-screen" style="display:none; flex-direction:column; align-items:center; padding:26px 22px 24px; background:var(--gcs); text-align:center;">
+      <div id="gm-greeting-lines" style="font-family:'Vazirmatn',sans-serif; color:#444; width:100%; margin-bottom:14px;"></div>
+      <div id="gm-greeting-fun" style="font-family:'Vazirmatn',sans-serif; font-size:12px; color:var(--gct); background:#fff; border-radius:14px; padding:12px 14px; border:1.5px solid var(--gcb); width:100%; line-height:1.7; margin-bottom:18px;"></div>
+      <button onclick="greetingContinue()" style="font-family:'Vazirmatn',sans-serif; font-size:13px; font-weight:700; color:#fff; background:var(--gc); border:none; border-radius:20px; padding:10px 28px; cursor:pointer; box-shadow:0 4px 14px -4px var(--gc);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" style="transition:transform 0.2s">🔐 ادامه — وارد کردن رمز</button>
+    </div>
+
     <!-- MEMORY SCREEN -->
     <div id="gm-memory-screen" style="display:none; flex-direction:column; align-items:center; padding:24px 24px 28px; background:var(--gcs); text-align:center;">
       <div id="gm-memory-emoji" style="font-size:40px; margin-bottom:10px; animation:parand-bounce 2s ease infinite;">🦋</div>
@@ -1639,6 +1646,29 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
   let pinAttempts = 0;
   let unlocked = { parand: false, noura: false };
 
+  const GREETINGS = {
+    parand: {
+      lines: [
+        "سلام! خوش اومدی 🦋 من پرندم!",
+        "دختر بابا پیمانم و عاشق پروانه‌ها و سفرم 🌸",
+        "من و خواهرم نورا با بابا اینجا آینده می‌سازیم 💕",
+        "ولی این گوشه مخصوص خودمه و یه رمز کوچولو داره...",
+        "اگه رمز نداری، ممنون که سر زدی! 🌷",
+      ],
+      funMsg: "🦋 پرند می‌گه: «وقتی بزرگ بشم می‌خوام مثل بابام کد بنویسم و با خواهرم نورا همه جای دنیا رو سفر کنیم! فعلاً دارم تمرین می‌کنم 😄»",
+    },
+    noura: {
+      lines: [
+        "سلام مهمان عزیز! ✨ من نورام!",
+        "بابام پیمانه و من خیلی دوستش دارم 💜",
+        "من و آبجیم پرند با هم عاشق سفر رفتن و چیزای جدید یاد گرفتنیم 🌍",
+        "این جا یه گوشه‌ی خصوصیه که فقط با رمز باز میشه...",
+        "ممنون که با احترام اومدی! 🌟",
+      ],
+      funMsg: "✨ نورا می‌گه: «من فکر می‌کنم دنیا خیلی بزرگه و باید همه‌جاشو ببینم! بابام می‌گه اگه کد بلد باشی می‌تونی هر چیزی بسازی. پس دارم یاد می‌گیرم! 🚀»",
+    },
+  };
+
   window.openGirlBox = function(girlKey) {
     console.log("openGirlBox called:", girlKey);
     activeGirl = girlKey;
@@ -1663,9 +1693,12 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
     // show correct screen
     if (unlocked[girlKey]) {
       showMemoryScreen(girlKey);
+    } else if (!sessionGreeted[girlKey]) {
+      showGreetingScreen(girlKey);
     } else {
       document.getElementById('gm-pin-screen').style.display = 'flex';
       document.getElementById('gm-memory-screen').style.display = 'none';
+      document.getElementById('gm-greeting-screen').style.display = 'none';
     }
 
     overlay.style.display = 'flex';
@@ -1673,6 +1706,48 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
       overlay.classList.add('show');
       box.classList.add('show');
     });
+  }
+
+  let sessionGreeted = { parand: false, noura: false };
+
+  function showGreetingScreen(girlKey) {
+    const g = GREETINGS[girlKey];
+    const cfg = CONFIG[girlKey];
+    document.getElementById('gm-pin-screen').style.display = 'none';
+    document.getElementById('gm-memory-screen').style.display = 'none';
+
+    const screen = document.getElementById('gm-greeting-screen');
+    screen.style.display = 'flex';
+
+    // animate lines one by one
+    const linesEl = document.getElementById('gm-greeting-lines');
+    linesEl.innerHTML = '';
+    g.lines.forEach((line, i) => {
+      const p = document.createElement('p');
+      p.textContent = line;
+      p.style.cssText = `opacity:0;transform:translateY(12px);transition:all 0.4s ease ${i*0.35}s;font-size:15px;line-height:1.7;font-weight:${i===0?'700':'500'};color:${i===0?cfg.color:'inherit'}`;
+      linesEl.appendChild(p);
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        p.style.opacity = '1';
+        p.style.transform = 'translateY(0)';
+      }));
+    });
+
+    // fun message
+    const funEl = document.getElementById('gm-greeting-fun');
+    funEl.textContent = g.funMsg;
+    funEl.style.cssText = `opacity:0;transform:translateY(8px);transition:all 0.4s ease ${g.lines.length*0.35+0.2}s`;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      funEl.style.opacity = '1';
+      funEl.style.transform = 'translateY(0)';
+    }));
+  }
+
+  window.greetingContinue = function() {
+    sessionGreeted[activeGirl] = true;
+    document.getElementById('gm-greeting-screen').style.display = 'none';
+    document.getElementById('gm-pin-screen').style.display = 'flex';
+    document.getElementById('gm-memory-screen').style.display = 'none';
   }
 
   window.closeGirlBox = function() {
