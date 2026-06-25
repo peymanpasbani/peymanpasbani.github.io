@@ -1545,7 +1545,8 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
     <!-- GREETING SCREEN -->
     <div id="gm-greeting-screen" style="display:none; flex-direction:column; align-items:center; padding:26px 22px 24px; background:var(--gcs); text-align:center;">
       <div id="gm-greeting-lines" style="font-family:'Vazirmatn',sans-serif; color:#444; width:100%; margin-bottom:14px;"></div>
-      <div id="gm-greeting-fun" style="font-family:'Vazirmatn',sans-serif; font-size:12px; color:var(--gct); background:#fff; border-radius:14px; padding:12px 14px; border:1.5px solid var(--gcb); width:100%; line-height:1.7; margin-bottom:18px;"></div>
+      <div id="gm-greeting-fun"></div>
+      <div id="gm-greeting-nopass"></div>
       <button onclick="greetingContinue()" style="font-family:'Vazirmatn',sans-serif; font-size:13px; font-weight:700; color:#fff; background:var(--gc); border:none; border-radius:20px; padding:10px 28px; cursor:pointer; box-shadow:0 4px 14px -4px var(--gc);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" style="transition:transform 0.2s">🔐 ادامه — وارد کردن رمز</button>
     </div>
 
@@ -1653,9 +1654,9 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
         "دختر بابا پیمانم و عاشق پروانه‌ها و سفرم 🌸",
         "من و خواهرم نورا با بابا اینجا آینده می‌سازیم 💕",
         "ولی این گوشه مخصوص خودمه و یه رمز کوچولو داره...",
-        "اگه رمز نداری، ممنون که سر زدی! 🌷",
       ],
-      funMsg: "🦋 پرند می‌گه: «وقتی بزرگ بشم می‌خوام مثل بابام کد بنویسم و با خواهرم نورا همه جای دنیا رو سفر کنیم! فعلاً دارم تمرین می‌کنم 😄»",
+      funMsg: "وقتی بزرگ بشم می‌خوام مثل بابام کد بنویسم و با خواهرم نورا همه جای دنیا رو سفر کنیم! فعلاً دارم تمرین می‌کنم 😄",
+      noPassMsg: "رمز نداری؟ اشکال نداره! شاید دفعه بعد بابا بهت داد 😉 ممنون که سر زدی 🌷",
     },
     noura: {
       lines: [
@@ -1663,9 +1664,9 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
         "بابام پیمانه و من خیلی دوستش دارم 💜",
         "من و آبجیم پرند با هم عاشق سفر رفتن و چیزای جدید یاد گرفتنیم 🌍",
         "این جا یه گوشه‌ی خصوصیه که فقط با رمز باز میشه...",
-        "ممنون که با احترام اومدی! 🌟",
       ],
-      funMsg: "✨ نورا می‌گه: «من فکر می‌کنم دنیا خیلی بزرگه و باید همه‌جاشو ببینم! بابام می‌گه اگه کد بلد باشی می‌تونی هر چیزی بسازی. پس دارم یاد می‌گیرم! 🚀»",
+      funMsg: "فکر می‌کنم دنیا خیلی بزرگه و باید همه‌جاشو ببینم! بابام می‌گه اگه کد بلد باشی می‌تونی هر چیزی بسازی. پس دارم یاد می‌گیرم! 🚀",
+      noPassMsg: "اگه رمز نداری نگران نباش! این جا فقط برای آدمای خاصه ✨ شاید یه روز تو هم خاص بشی 😄",
     },
   };
 
@@ -1733,13 +1734,22 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
       }));
     });
 
-    // fun message
+    // fun message box
     const funEl = document.getElementById('gm-greeting-fun');
-    funEl.textContent = g.funMsg;
-    funEl.style.cssText = `opacity:0;transform:translateY(8px);transition:all 0.4s ease ${g.lines.length*0.35+0.2}s`;
+    funEl.style.cssText = `opacity:0;transform:translateY(8px);transition:all 0.4s ease ${g.lines.length*0.35+0.2}s;font-family:'Vazirmatn',sans-serif;font-size:13px;color:#444;background:#fff;border-radius:14px;padding:12px 14px;border:1.5px solid var(--gcb);width:100%;line-height:1.8;margin-bottom:10px;`;
+    funEl.innerHTML = `<span style="font-size:17px;">${cfg.emoji}</span> ${g.funMsg}`;
     requestAnimationFrame(() => requestAnimationFrame(() => {
       funEl.style.opacity = '1';
       funEl.style.transform = 'translateY(0)';
+    }));
+
+    // no-pass message
+    const noPassEl = document.getElementById('gm-greeting-nopass');
+    noPassEl.style.cssText = `opacity:0;transform:translateY(8px);transition:all 0.4s ease ${g.lines.length*0.35+0.55}s;font-family:'Vazirmatn',sans-serif;font-size:12px;color:#888;line-height:1.7;margin-bottom:16px;`;
+    noPassEl.textContent = g.noPassMsg;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      noPassEl.style.opacity = '1';
+      noPassEl.style.transform = 'translateY(0)';
     }));
   }
 
