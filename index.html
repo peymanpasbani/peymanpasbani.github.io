@@ -1630,14 +1630,6 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
     document.getElementById('gm-memory-screen').style.display = 'flex';
   }
 
-  // click handlers on girl chars
-  document.querySelectorAll('.girl-char').forEach(el => {
-    el.style.cursor = 'pointer';
-    el.addEventListener('click', () => {
-      const key = el.classList.contains('parand') ? 'parand' : 'noura';
-      openGirlBox(key);
-    });
-  });
 </script>
 
 <!-- GIRL MEMORY MODAL -->
@@ -1729,5 +1721,16 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
   .pin-btn:active { transform: scale(0.95); }
   .pin-del { font-size: 18px; }
 </style>
+
+<script>
+  // click handlers on girl chars — must run AFTER modal HTML is in the DOM
+  document.querySelectorAll('.girl-char').forEach(el => {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', () => {
+      const key = el.classList.contains('parand') ? 'parand' : 'noura';
+      openGirlBox(key);
+    });
+  });
+</script>
 </body>
 </html>
