@@ -97,9 +97,9 @@
 
   .hero-name-block { margin-bottom: 10px; }
   .hero-name-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; opacity: 0; animation: fade-up 0.4s ease forwards 0.1s; }
-  .hero-name { font-size: clamp(52px, 14vw, 96px); font-weight: 900; line-height: 0.92; letter-spacing: -2px; color: var(--text); overflow: visible; }
-  .hero-name-line { display: block; overflow: hidden; }
-  .hero-name-line span { display: block; opacity: 0; transform: translateY(100%); animation: slide-up 0.65s cubic-bezier(0.16,1,0.3,1) forwards; }
+  .hero-name { font-size: clamp(52px, 14vw, 96px); font-weight: 900; line-height: 0.92; letter-spacing: -2px; color: var(--text); overflow: visible; pointer-events: none; }
+  .hero-name-line { display: block; overflow: hidden; pointer-events: none; }
+  .hero-name-line span { display: block; opacity: 0; transform: translateY(100%); animation: slide-up 0.65s cubic-bezier(0.16,1,0.3,1) forwards; pointer-events: none; }
   .hero-name-line:nth-child(1) span { animation-delay: 0.18s; }
   .hero-name-en { font-family: 'JetBrains Mono', monospace; font-size: clamp(11px, 2.5vw, 15px); letter-spacing: 5px; color: var(--amber); text-transform: uppercase; direction: ltr; margin-top: 14px; opacity: 0; animation: fade-up 0.5s ease forwards 0.45s; }
 
@@ -141,11 +141,12 @@
   .girls-row {
     display: inline-flex; align-items: flex-end; gap: 6px;
     position: absolute;
-    pointer-events: all;
+    pointer-events: none;
   }
   .girl-char {
     display: flex; flex-direction: column; align-items: center;
-    position: relative; cursor: default; user-select: none;
+    position: relative; cursor: pointer; user-select: none;
+    pointer-events: all;
   }
   .girl-name-tag {
     font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
