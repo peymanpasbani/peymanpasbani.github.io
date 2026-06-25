@@ -140,8 +140,10 @@
   /* PARAND & NOURA CHARACTERS */
   .girls-row {
     display: inline-flex; align-items: flex-end; gap: 6px;
-    position: absolute;
+    position: fixed;
+    bottom: 24px; right: 24px;
     pointer-events: all;
+    z-index: 200;
   }
   .girl-char {
     display: flex; flex-direction: column; align-items: center;
@@ -406,7 +408,7 @@
     <div class="hero-terminal">
       <span class="hero-terminal-prompt">peyman@amadeus:~$ whoami<span class="hero-terminal-cursor"></span></span>
     </div>
-    <span class="girls-row" style="position:absolute; top:-10px; left:-10px; opacity:0; animation:fade-up 0.6s ease forwards 0.5s; z-index:10;">
+    <span class="girls-row" style="position:fixed; bottom:24px; right:24px; opacity:0; animation:fade-up 0.6s ease forwards 0.5s; z-index:200; pointer-events:all;">
           <!-- Parand -->
           <span class="girl-char parand" onclick="openGirlBox('parand')" style="cursor:pointer;">
             <span class="girl-name-tag">Parand 🦋</span>
@@ -1588,6 +1590,7 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
 
 <script>
   // ---- GIRL MEMORY BOX ----
+  // expose to window for inline onclick handlers
   const PINS = { parand: '1390', noura: '1394' };
   // رمزها رو اینجا عوض کن ↑
 
@@ -1626,7 +1629,7 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
   let pinAttempts = 0;
   let unlocked = { parand: false, noura: false };
 
-  function openGirlBox(girlKey) {
+  window.openGirlBox = function(girlKey) {
     activeGirl = girlKey;
     pinAttempts = 0;
     const cfg = CONFIG[girlKey];
@@ -1661,7 +1664,7 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
     });
   }
 
-  function closeGirlBox() {
+  window.closeGirlBox = function() {
     const overlay = document.getElementById('girl-overlay');
     const box = document.getElementById('girl-modal');
     overlay.classList.remove('show');
@@ -1677,7 +1680,7 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
     });
   }
 
-  function pinKeyPress(digit) {
+  window.pinKeyPress = function(digit) {
     const inp = document.getElementById('gm-pin-input');
     if (inp.value.length >= 4) return;
     inp.value += digit;
@@ -1687,14 +1690,14 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
     }
   }
 
-  function pinDelete() {
+  window.pinDelete = function() {
     const inp = document.getElementById('gm-pin-input');
     inp.value = inp.value.slice(0, -1);
     updatePinDots(inp.value);
     document.getElementById('gm-pin-error').textContent = '';
   }
 
-  function checkPin() {
+  window.checkPin = function() {
     const inp = document.getElementById('gm-pin-input');
     const entered = inp.value;
     const correct = PINS[activeGirl];
