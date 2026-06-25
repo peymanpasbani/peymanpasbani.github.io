@@ -141,7 +141,7 @@
   .girls-row {
     display: inline-flex; align-items: flex-end; gap: 6px;
     position: fixed;
-    bottom: 24px; right: 24px;
+    top: 70px; left: 24px;
     pointer-events: all;
     z-index: 200;
   }
@@ -1755,8 +1755,10 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
     const box = document.getElementById('girl-modal');
     overlay.classList.remove('show');
     box.classList.remove('show');
-    overlay.style.pointerEvents = 'none';
-    setTimeout(() => { overlay.style.display = 'none'; }, 300);
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      overlay.style.pointerEvents = '';
+    }, 300);
   }
 
   function updatePinDots(val) {
