@@ -100,9 +100,6 @@
   .hero-name { font-size: clamp(52px, 14vw, 96px); font-weight: 900; line-height: 0.92; letter-spacing: -2px; color: var(--text); overflow: visible; pointer-events: none; }
   .hero-name-line { display: block; overflow: hidden; pointer-events: none; }
   .hero-name-line span { display: block; opacity: 0; transform: translateY(100%); animation: slide-up 0.65s cubic-bezier(0.16,1,0.3,1) forwards; pointer-events: none; }
-  /* allow girl characters to receive clicks despite parent pointer-events:none */
-  .girls-row { pointer-events: all !important; }
-  .girl-char { pointer-events: all !important; }
   .hero-name-line:nth-child(1) span { animation-delay: 0.18s; }
   .hero-name-en { font-family: 'JetBrains Mono', monospace; font-size: clamp(11px, 2.5vw, 15px); letter-spacing: 5px; color: var(--amber); text-transform: uppercase; direction: ltr; margin-top: 14px; opacity: 0; animation: fade-up 0.5s ease forwards 0.45s; }
 
@@ -144,7 +141,7 @@
   .girls-row {
     display: inline-flex; align-items: flex-end; gap: 6px;
     position: absolute;
-    pointer-events: none;
+    pointer-events: all;
   }
   .girl-char {
     display: flex; flex-direction: column; align-items: center;
@@ -1498,7 +1495,99 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
 
   // Init
   renderPage(1);
+</script>
 
+<!-- GIRL MEMORY MODAL -->
+<div id="girl-overlay" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(10,20,30,0.7); backdrop-filter:blur(6px); transition:opacity 0.3s ease; opacity:0;">
+  <div id="girl-modal" style="--gc:#FF6BB5; --gcs:#FFF0F7; --gcb:#FFB3D9; --gct:#C0337A; position:relative; width:min(340px,90vw); border-radius:24px; background:#fff; border:2px solid var(--gcb); box-shadow:0 20px 60px -10px rgba(0,0,0,0.4), 0 0 0 1px var(--gcb); overflow:hidden; transition:transform 0.3s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease; transform:scale(0.88) translateY(20px); opacity:0;">
+
+    <!-- header -->
+    <div style="background:linear-gradient(135deg, var(--gc), color-mix(in srgb, var(--gc) 70%, #fff)); padding:20px 20px 16px; text-align:center; position:relative;">
+      <!-- close btn -->
+      <button onclick="closeGirlBox()" style="position:absolute; top:12px; left:12px; background:rgba(255,255,255,0.3); border:none; border-radius:50%; width:28px; height:28px; cursor:pointer; font-size:14px; color:#fff; display:flex; align-items:center; justify-content:center; line-height:1;">✕</button>
+      <!-- floating stars deco -->
+      <div style="position:absolute; top:8px; right:14px; font-size:13px; opacity:0.6; animation:star-pop 2s ease infinite;">⭐</div>
+      <div style="position:absolute; bottom:10px; left:40px; font-size:10px; opacity:0.5; animation:star-pop 2s ease infinite 1s;">✦</div>
+      <div id="gm-emoji" style="font-size:36px; margin-bottom:4px;">🦋</div>
+      <div id="gm-name" style="font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:700; color:#fff; letter-spacing:2px; text-shadow:0 2px 8px rgba(0,0,0,0.2);">Parand</div>
+      <div id="gm-desc" style="font-family:'Vazirmatn',sans-serif; font-size:11px; color:rgba(255,255,255,0.85); margin-top:5px; line-height:1.5;"></div>
+    </div>
+
+    <!-- PIN SCREEN -->
+    <div id="gm-pin-screen" style="display:flex; flex-direction:column; align-items:center; padding:24px 20px 28px; background:var(--gcs);">
+      <div style="font-family:'Vazirmatn',sans-serif; font-size:13px; color:var(--gct); font-weight:600; margin-bottom:16px;">🔒 رمز چهاررقمی رو وارد کن</div>
+
+      <!-- pin dots -->
+      <div id="gm-pin-dots" style="display:flex; gap:12px; margin-bottom:6px; direction:ltr;">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <input id="gm-pin-input" type="hidden" value="">
+      <div id="gm-pin-error" style="font-family:'Vazirmatn',sans-serif; font-size:11px; color:#e05; min-height:18px; margin-bottom:10px; text-align:center;"></div>
+
+      <!-- numpad -->
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; width:200px;">
+        <button class="pin-btn" onclick="pinKeyPress('1')">1</button>
+        <button class="pin-btn" onclick="pinKeyPress('2')">2</button>
+        <button class="pin-btn" onclick="pinKeyPress('3')">3</button>
+        <button class="pin-btn" onclick="pinKeyPress('4')">4</button>
+        <button class="pin-btn" onclick="pinKeyPress('5')">5</button>
+        <button class="pin-btn" onclick="pinKeyPress('6')">6</button>
+        <button class="pin-btn" onclick="pinKeyPress('7')">7</button>
+        <button class="pin-btn" onclick="pinKeyPress('8')">8</button>
+        <button class="pin-btn" onclick="pinKeyPress('9')">9</button>
+        <button class="pin-btn pin-del" onclick="pinDelete()" style="grid-column:1;">⌫</button>
+        <button class="pin-btn" onclick="pinKeyPress('0')">0</button>
+        <button class="pin-btn pin-ok" onclick="checkPin()" style="background:var(--gc); color:#fff;">OK</button>
+      </div>
+    </div>
+
+    <!-- MEMORY SCREEN -->
+    <div id="gm-memory-screen" style="display:none; flex-direction:column; align-items:center; padding:24px 24px 28px; background:var(--gcs); text-align:center;">
+      <div id="gm-memory-emoji" style="font-size:40px; margin-bottom:10px; animation:parand-bounce 2s ease infinite;">🦋</div>
+      <div id="gm-memory-title" style="font-family:'Vazirmatn',sans-serif; font-size:15px; font-weight:800; color:var(--gct); margin-bottom:14px; line-height:1.4;"></div>
+      <div id="gm-memory-text" style="font-family:'Vazirmatn',sans-serif; font-size:13px; color:#555; line-height:2; white-space:pre-line; background:#fff; border-radius:16px; padding:16px 18px; border:1.5px solid var(--gcb); box-shadow:0 4px 16px -4px rgba(0,0,0,0.08);"></div>
+      <button onclick="unlocked[activeGirl]=false; openGirlBox(activeGirl);" style="margin-top:16px; font-family:'Vazirmatn',sans-serif; font-size:11px; color:var(--gct); background:transparent; border:1.5px solid var(--gcb); border-radius:20px; padding:6px 16px; cursor:pointer; transition:all 0.2s;">🔒 قفل کردن</button>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  #girl-overlay.show { opacity: 1; }
+  #girl-modal.show { transform: scale(1) translateY(0); opacity: 1; }
+  @keyframes shake {
+    0%,100% { transform: scale(1) translateX(0); }
+    20% { transform: scale(1) translateX(-8px); }
+    40% { transform: scale(1) translateX(8px); }
+    60% { transform: scale(1) translateX(-5px); }
+    80% { transform: scale(1) translateX(5px); }
+  }
+  #girl-modal.shake { animation: shake 0.45s ease; }
+
+  #gm-pin-dots span {
+    display: block; width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid var(--gcb); background: transparent;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  #gm-pin-dots span.filled {
+    background: var(--gc); border-color: var(--gc);
+    transform: scale(1.15);
+  }
+
+  .pin-btn {
+    font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 600;
+    width: 100%; aspect-ratio: 1; border-radius: 14px;
+    border: 1.5px solid var(--gcb); background: #fff; color: var(--gct);
+    cursor: pointer; transition: all 0.15s ease;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 6px -2px rgba(0,0,0,0.1);
+  }
+  .pin-btn:hover { background: var(--gc); color: #fff; border-color: var(--gc); transform: scale(1.06); }
+  .pin-btn:active { transform: scale(0.95); }
+  .pin-del { font-size: 18px; }
+</style>
+
+<script>
   // ---- GIRL MEMORY BOX ----
   const PINS = { parand: '1390', noura: '1394' };
   // رمزها رو اینجا عوض کن ↑
@@ -1633,110 +1722,14 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
     document.getElementById('gm-memory-screen').style.display = 'flex';
   }
 
-</script>
-
-<!-- GIRL MEMORY MODAL -->
-<div id="girl-overlay" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; background:rgba(10,20,30,0.7); backdrop-filter:blur(6px); transition:opacity 0.3s ease; opacity:0;">
-  <div id="girl-modal" style="--gc:#FF6BB5; --gcs:#FFF0F7; --gcb:#FFB3D9; --gct:#C0337A; position:relative; width:min(340px,90vw); border-radius:24px; background:#fff; border:2px solid var(--gcb); box-shadow:0 20px 60px -10px rgba(0,0,0,0.4), 0 0 0 1px var(--gcb); overflow:hidden; transition:transform 0.3s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease; transform:scale(0.88) translateY(20px); opacity:0;">
-
-    <!-- header -->
-    <div style="background:linear-gradient(135deg, var(--gc), color-mix(in srgb, var(--gc) 70%, #fff)); padding:20px 20px 16px; text-align:center; position:relative;">
-      <!-- close btn -->
-      <button onclick="closeGirlBox()" style="position:absolute; top:12px; left:12px; background:rgba(255,255,255,0.3); border:none; border-radius:50%; width:28px; height:28px; cursor:pointer; font-size:14px; color:#fff; display:flex; align-items:center; justify-content:center; line-height:1;">✕</button>
-      <!-- floating stars deco -->
-      <div style="position:absolute; top:8px; right:14px; font-size:13px; opacity:0.6; animation:star-pop 2s ease infinite;">⭐</div>
-      <div style="position:absolute; bottom:10px; left:40px; font-size:10px; opacity:0.5; animation:star-pop 2s ease infinite 1s;">✦</div>
-      <div id="gm-emoji" style="font-size:36px; margin-bottom:4px;">🦋</div>
-      <div id="gm-name" style="font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:700; color:#fff; letter-spacing:2px; text-shadow:0 2px 8px rgba(0,0,0,0.2);">Parand</div>
-      <div id="gm-desc" style="font-family:'Vazirmatn',sans-serif; font-size:11px; color:rgba(255,255,255,0.85); margin-top:5px; line-height:1.5;"></div>
-    </div>
-
-    <!-- PIN SCREEN -->
-    <div id="gm-pin-screen" style="display:flex; flex-direction:column; align-items:center; padding:24px 20px 28px; background:var(--gcs);">
-      <div style="font-family:'Vazirmatn',sans-serif; font-size:13px; color:var(--gct); font-weight:600; margin-bottom:16px;">🔒 رمز چهاررقمی رو وارد کن</div>
-
-      <!-- pin dots -->
-      <div id="gm-pin-dots" style="display:flex; gap:12px; margin-bottom:6px; direction:ltr;">
-        <span></span><span></span><span></span><span></span>
-      </div>
-      <input id="gm-pin-input" type="hidden" value="">
-      <div id="gm-pin-error" style="font-family:'Vazirmatn',sans-serif; font-size:11px; color:#e05; min-height:18px; margin-bottom:10px; text-align:center;"></div>
-
-      <!-- numpad -->
-      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; width:200px;">
-        <button class="pin-btn" onclick="pinKeyPress('1')">1</button>
-        <button class="pin-btn" onclick="pinKeyPress('2')">2</button>
-        <button class="pin-btn" onclick="pinKeyPress('3')">3</button>
-        <button class="pin-btn" onclick="pinKeyPress('4')">4</button>
-        <button class="pin-btn" onclick="pinKeyPress('5')">5</button>
-        <button class="pin-btn" onclick="pinKeyPress('6')">6</button>
-        <button class="pin-btn" onclick="pinKeyPress('7')">7</button>
-        <button class="pin-btn" onclick="pinKeyPress('8')">8</button>
-        <button class="pin-btn" onclick="pinKeyPress('9')">9</button>
-        <button class="pin-btn pin-del" onclick="pinDelete()" style="grid-column:1;">⌫</button>
-        <button class="pin-btn" onclick="pinKeyPress('0')">0</button>
-        <button class="pin-btn pin-ok" onclick="checkPin()" style="background:var(--gc); color:#fff;">OK</button>
-      </div>
-    </div>
-
-    <!-- MEMORY SCREEN -->
-    <div id="gm-memory-screen" style="display:none; flex-direction:column; align-items:center; padding:24px 24px 28px; background:var(--gcs); text-align:center;">
-      <div id="gm-memory-emoji" style="font-size:40px; margin-bottom:10px; animation:parand-bounce 2s ease infinite;">🦋</div>
-      <div id="gm-memory-title" style="font-family:'Vazirmatn',sans-serif; font-size:15px; font-weight:800; color:var(--gct); margin-bottom:14px; line-height:1.4;"></div>
-      <div id="gm-memory-text" style="font-family:'Vazirmatn',sans-serif; font-size:13px; color:#555; line-height:2; white-space:pre-line; background:#fff; border-radius:16px; padding:16px 18px; border:1.5px solid var(--gcb); box-shadow:0 4px 16px -4px rgba(0,0,0,0.08);"></div>
-      <button onclick="unlocked[activeGirl]=false; openGirlBox(activeGirl);" style="margin-top:16px; font-family:'Vazirmatn',sans-serif; font-size:11px; color:var(--gct); background:transparent; border:1.5px solid var(--gcb); border-radius:20px; padding:6px 16px; cursor:pointer; transition:all 0.2s;">🔒 قفل کردن</button>
-    </div>
-
-  </div>
-</div>
-
-<style>
-  #girl-overlay.show { opacity: 1; }
-  #girl-modal.show { transform: scale(1) translateY(0); opacity: 1; }
-  @keyframes shake {
-    0%,100% { transform: scale(1) translateX(0); }
-    20% { transform: scale(1) translateX(-8px); }
-    40% { transform: scale(1) translateX(8px); }
-    60% { transform: scale(1) translateX(-5px); }
-    80% { transform: scale(1) translateX(5px); }
-  }
-  #girl-modal.shake { animation: shake 0.45s ease; }
-
-  #gm-pin-dots span {
-    display: block; width: 14px; height: 14px; border-radius: 50%;
-    border: 2px solid var(--gcb); background: transparent;
-    transition: background 0.15s ease, transform 0.15s ease;
-  }
-  #gm-pin-dots span.filled {
-    background: var(--gc); border-color: var(--gc);
-    transform: scale(1.15);
-  }
-
-  .pin-btn {
-    font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 600;
-    width: 100%; aspect-ratio: 1; border-radius: 14px;
-    border: 1.5px solid var(--gcb); background: #fff; color: var(--gct);
-    cursor: pointer; transition: all 0.15s ease;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 2px 6px -2px rgba(0,0,0,0.1);
-  }
-  .pin-btn:hover { background: var(--gc); color: #fff; border-color: var(--gc); transform: scale(1.06); }
-  .pin-btn:active { transform: scale(0.95); }
-  .pin-del { font-size: 18px; }
-</style>
-
-<script>
-  // Girl click handlers — placed AFTER modal HTML so all elements exist in DOM
-  // Also runs after animation delay so opacity is no longer 0
-  setTimeout(function() {
-    document.querySelectorAll('.girl-char').forEach(function(el) {
-      el.style.cursor = 'pointer';
-      el.addEventListener('click', function() {
-        var key = el.classList.contains('parand') ? 'parand' : 'noura';
-        openGirlBox(key);
-      });
+  // click handlers on girl chars
+  document.querySelectorAll('.girl-char').forEach(el => {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', () => {
+      const key = el.classList.contains('parand') ? 'parand' : 'noura';
+      openGirlBox(key);
     });
-  }, 700);
+  });
 </script>
 </body>
 </html>
