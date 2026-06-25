@@ -406,10 +406,9 @@
     <div class="hero-terminal">
       <span class="hero-terminal-prompt">peyman@amadeus:~$ whoami<span class="hero-terminal-cursor"></span></span>
     </div>
-    <div style="position:relative;">
-      <span class="girls-row" style="position:absolute; top:-10px; left:-10px; opacity:0; animation:fade-up 0.6s ease forwards 0.5s; z-index:10;">
+    <span class="girls-row" style="position:absolute; top:-10px; left:-10px; opacity:0; animation:fade-up 0.6s ease forwards 0.5s; z-index:10;">
           <!-- Parand -->
-          <span class="girl-char parand">
+          <span class="girl-char parand" onclick="openGirlBox('parand')" style="cursor:pointer;">
             <span class="girl-name-tag">Parand 🦋</span>
             <span class="heart-float">💜</span>
             <svg class="girl-svg parand-body" viewBox="0 0 54 60" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -439,7 +438,7 @@
             </svg>
           </span>
           <!-- Noura -->
-          <span class="girl-char noura">
+          <span class="girl-char noura" onclick="openGirlBox('noura')" style="cursor:pointer;">
             <span class="girl-name-tag">Noura ✨</span>
             <span class="heart-float2">💛</span>
             <svg class="girl-svg noura-body" viewBox="0 0 54 60" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -469,7 +468,6 @@
             </svg>
           </span>
         </span>
-      </div>
       <div class="hero-name-block">
       <div class="hero-name-label">// travel tech · amadeus it group</div>
       <div class="hero-name" style="position:relative;">
@@ -1724,14 +1722,7 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
     document.getElementById('gm-memory-screen').style.display = 'flex';
   }
 
-  // click handlers on girl chars
-  document.querySelectorAll('.girl-char').forEach(el => {
-    el.style.cursor = 'pointer';
-    el.addEventListener('click', () => {
-      const key = el.classList.contains('parand') ? 'parand' : 'noura';
-      openGirlBox(key);
-    });
-  });
+  // click handlers now use inline onclick on girl-char spans
 </script>
 </body>
 </html>
