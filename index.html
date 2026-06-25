@@ -1601,8 +1601,15 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
 <script>
   // ---- GIRL MEMORY BOX ----
   // expose to window for inline onclick handlers
-  const PINS = { parand: '1390', noura: '1394' };
-  // رمزها رو اینجا عوض کن ↑
+  const PINS = {
+    parand: 'bb4d3bd125603e48cf30c795c427afd9da53f3a70482aa98ca3b8bbe1980d021',
+    noura:  '48d3007452360e9b7e6b8ed5c7eab72c2e738bb48c43ffdbcb73ecc8550fd937'
+  };
+
+  async function hashPin(pin) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pin));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
 
   const CONFIG = {
     parand: {
@@ -1795,11 +1802,12 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
     document.getElementById('gm-pin-error').textContent = '';
   }
 
-  window.checkPin = function() {
+  window.checkPin = async function() {
     const inp = document.getElementById('gm-pin-input');
     const entered = inp.value;
+    const hashed = await hashPin(entered);
     const correct = PINS[activeGirl];
-    if (entered === correct) {
+    if (hashed === correct) {
       unlocked[activeGirl] = true;
       showMemoryScreen(activeGirl);
     } else {
