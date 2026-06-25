@@ -148,16 +148,23 @@
     position: relative; cursor: default; user-select: none;
   }
   .girl-name-tag {
-    font-family: 'Vazirmatn', sans-serif; font-size: 8px; font-weight: 700;
-    color: #fff; padding: 2px 5px; border-radius: 20px;
-    margin-bottom: 3px; letter-spacing: 0.3px;
-    opacity: 0; transform: translateY(4px);
-    transition: all 0.25s ease;
-    white-space: nowrap;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+    color: #fff; padding: 4px 9px; border-radius: 12px;
+    margin-bottom: 6px; letter-spacing: 0.5px;
+    position: relative; white-space: nowrap;
+    opacity: 1;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
   }
-  .girl-char:hover .girl-name-tag { opacity: 1; transform: translateY(0); }
+  /* tail of bubble */
+  .girl-name-tag::after {
+    content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+  }
   .girl-char.parand .girl-name-tag { background: #FF6BB5; }
+  .girl-char.parand .girl-name-tag::after { border-top: 6px solid #FF6BB5; }
   .girl-char.noura .girl-name-tag { background: #B06BFF; }
+  .girl-char.noura .girl-name-tag::after { border-top: 6px solid #B06BFF; }
 
   .girl-svg { width: 54px; height: 54px; }
 
@@ -407,7 +414,7 @@
         <span class="girls-row" style="position:absolute; top:-10px; left:-10px; opacity:0; animation:fade-up 0.6s ease forwards 0.5s; z-index:10;">
           <!-- Parand -->
           <span class="girl-char parand">
-            <span class="girl-name-tag">پرند 🦋</span>
+            <span class="girl-name-tag">Parand 🦋</span>
             <span class="heart-float">💜</span>
             <svg class="girl-svg parand-body" viewBox="0 0 54 60" fill="none" xmlns="http://www.w3.org/2000/svg">
               <ellipse cx="27" cy="46" rx="13" ry="11" fill="#FF6BB5"/>
@@ -437,7 +444,7 @@
           </span>
           <!-- Noura -->
           <span class="girl-char noura">
-            <span class="girl-name-tag">نورا ✨</span>
+            <span class="girl-name-tag">Noura ✨</span>
             <span class="heart-float2">💛</span>
             <svg class="girl-svg noura-body" viewBox="0 0 54 60" fill="none" xmlns="http://www.w3.org/2000/svg">
               <ellipse cx="27" cy="46" rx="13" ry="11" fill="#B06BFF"/>
