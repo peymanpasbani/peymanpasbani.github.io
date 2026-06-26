@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -1606,6 +1606,9 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
     noura:  '48d3007452360e9b7e6b8ed5c7eab72c2e738bb48c43ffdbcb73ecc8550fd937'
   };
 
+  // Second-step "gag" PIN for Parand only. Hashed so it can't be read from source.
+  const PARSA_GAG_PIN_HASH = 'a3346b8b4c26feb607f8a40699c934ef426dee5ceebf51f9f7209aa79c08a0da';
+
   async function hashPin(pin) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pin));
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
@@ -1653,6 +1656,7 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
   let activeGirl = null;
   let pinAttempts = 0;
   let unlocked = { parand: false, noura: false };
+  let gagPinAttempts = 0; // for the parand gag step
 
   const GREETINGS = {
     parand: {
@@ -1681,6 +1685,7 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
     console.log("openGirlBox called:", girlKey);
     activeGirl = girlKey;
     pinAttempts = 0;
+    gagPinAttempts = 0;
     const cfg = CONFIG[girlKey];
     const box = document.getElementById('girl-modal');
     const overlay = document.getElementById('girl-overlay');
@@ -1697,6 +1702,7 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
     document.getElementById('gm-pin-input').value = '';
     document.getElementById('gm-pin-error').textContent = '';
     document.getElementById('gm-pin-dots').innerHTML = '<span></span><span></span><span></span><span></span>';
+    resetPinScreenLabel();
 
     // show correct screen
     if (unlocked[girlKey]) {
@@ -1802,10 +1808,56 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
     document.getElementById('gm-pin-error').textContent = '';
   }
 
+  function resetPinScreenLabel() {
+    const label = document.querySelector('#gm-pin-screen > div:first-child');
+    if (label) label.textContent = '🔒 رمز چهاررقمی رو وارد کن';
+  }
+
   window.checkPin = async function() {
     const inp = document.getElementById('gm-pin-input');
     const entered = inp.value;
     const hashed = await hashPin(entered);
+
+    // Special gag step: only for Parand, only once the real PIN is correctly entered.
+    if (activeGirl === 'parand' && !window.__parandGagPassed) {
+      const correct = PINS[activeGirl];
+      if (hashed === correct) {
+        showParandGagChallenge();
+        return;
+      } else {
+        pinAttempts++;
+        inp.value = '';
+        updatePinDots('');
+        const errEl = document.getElementById('gm-pin-error');
+        errEl.textContent = pinAttempts >= 3 ? 'رمز اشتباهه! 🙈 دوباره امتحان کن' : 'رمز درست نیست 💔';
+        const box = document.getElementById('girl-modal');
+        box.classList.add('shake');
+        setTimeout(() => box.classList.remove('shake'), 500);
+        return;
+      }
+    }
+
+    // Gag step itself: checking the second PIN (1407)
+    if (activeGirl === 'parand' && window.__parandGagPassed === 'awaiting-second') {
+      if (hashed === PARSA_GAG_PIN_HASH) {
+        window.__parandGagPassed = true;
+        unlocked[activeGirl] = true;
+        resetPinScreenLabel();
+        showMemoryScreen(activeGirl);
+      } else {
+        gagPinAttempts++;
+        inp.value = '';
+        updatePinDots('');
+        const errEl = document.getElementById('gm-pin-error');
+        errEl.textContent = 'نه نه، اون رمز درست نبود 😅 دوباره فکر کن!';
+        const box = document.getElementById('girl-modal');
+        box.classList.add('shake');
+        setTimeout(() => box.classList.remove('shake'), 500);
+      }
+      return;
+    }
+
+    // Normal flow (Noura, or anything else)
     const correct = PINS[activeGirl];
     if (hashed === correct) {
       unlocked[activeGirl] = true;
@@ -1820,6 +1872,19 @@ Market gap: AirHelp does not operate in Iran. No domestic competitor exists. 50M
       box.classList.add('shake');
       setTimeout(() => box.classList.remove('shake'), 500);
     }
+  }
+
+  function showParandGagChallenge() {
+    window.__parandGagPassed = 'awaiting-second';
+    const inp = document.getElementById('gm-pin-input');
+    inp.value = '';
+    updatePinDots('');
+    const label = document.querySelector('#gm-pin-screen > div:first-child');
+    if (label) {
+      label.innerHTML = '😏 اِاِاِ! این رمز که رمز پارسا بود!<br>اگه راست می‌گی و واقعاً بابامی،<br>تاریخ تولدمو بزن ببینم باهوشی!';
+    }
+    const errEl = document.getElementById('gm-pin-error');
+    errEl.textContent = '';
   }
 
   function showMemoryScreen(girlKey) {
