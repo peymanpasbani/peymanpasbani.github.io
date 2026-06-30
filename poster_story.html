@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>آموزش تعاملی نیرا</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg-0:#070A0C;
+  --bg-1:#0C1416;
+  --line:#1C2A2C;
+  --gold:#D9B370;
+  --gold-soft:#B89456;
+  --emerald:#36D6A8;
+  --emerald-dim:#1B7A63;
+  --text-0:#F2F4F1;
+  --text-1:#9CA8A6;
+  --text-2:#5C6967;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html,body{
+  width:1080px;
+  height:1920px;
+  background:var(--bg-0);
+  font-family:'Vazirmatn',sans-serif;
+  overflow:hidden;
+}
+
+.poster{
+  position:relative;
+  width:1080px;
+  height:1920px;
+  background:
+    radial-gradient(ellipse 900px 500px at 50% -10%, rgba(54,214,168,0.10), transparent 60%),
+    radial-gradient(ellipse 700px 400px at 90% 100%, rgba(217,179,112,0.08), transparent 60%),
+    linear-gradient(180deg, #070A0C 0%, #0A1112 55%, #070A0C 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* faint grid texture, echoes terminal screen */
+.grid-overlay{
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size:54px 54px;
+  mask-image:radial-gradient(ellipse 900px 700px at 50% 35%, black, transparent 75%);
+  -webkit-mask-image:radial-gradient(ellipse 900px 700px at 50% 35%, black, transparent 75%);
+}
+
+/* ---- top mark ---- */
+.brand{
+  margin-top:190px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  z-index:2;
+}
+.brand .mark{
+  width:46px;height:46px;
+  border-radius:13px;
+  background:linear-gradient(155deg,#1E3633,#0E1A18);
+  border:1px solid rgba(54,214,168,0.35);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;
+  font-weight:700;
+  font-size:22px;
+  color:var(--emerald);
+  box-shadow:0 0 22px rgba(54,214,168,0.18);
+}
+.brand .eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:15px;
+  letter-spacing:2px;
+  color:var(--text-1);
+  direction:ltr;
+}
+
+/* ---- headline ---- */
+.headline-wrap{
+  margin-top:84px;
+  text-align:center;
+  z-index:2;
+  padding:0 70px;
+}
+.eyebrow-fa{
+  font-size:19px;
+  font-weight:500;
+  color:var(--emerald);
+  letter-spacing:.5px;
+  margin-bottom:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+}
+.eyebrow-fa::before,.eyebrow-fa::after{
+  content:'';
+  width:30px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--emerald-dim));
+}
+.eyebrow-fa::after{transform:scaleX(-1);}
+
+h1{
+  font-size:96px;
+  font-weight:800;
+  line-height:1.18;
+  background:linear-gradient(95deg,#F4F1E8 0%, #D9B370 48%, #F4F1E8 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  letter-spacing:-1px;
+}
+
+.subtitle{
+  margin-top:26px;
+  font-size:25px;
+  font-weight:400;
+  color:var(--text-1);
+  line-height:1.85;
+  max-width:760px;
+  margin-left:auto;
+  margin-right:auto;
+}
+.subtitle b{color:var(--text-0);font-weight:600;}
+
+/* ---- terminal signature element ---- */
+.terminal{
+  margin-top:96px;
+  width:860px;
+  border-radius:18px;
+  background:linear-gradient(180deg,#0C1414,#080D0D);
+  border:1px solid var(--line);
+  box-shadow:
+    0 0 0 1px rgba(54,214,168,0.06),
+    0 40px 80px -30px rgba(0,0,0,0.7),
+    0 0 60px -10px rgba(54,214,168,0.10);
+  overflow:hidden;
+  z-index:2;
+}
+.term-bar{
+  height:46px;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  gap:9px;
+  background:#0A1110;
+  border-bottom:1px solid var(--line);
+}
+.dot{width:11px;height:11px;border-radius:50%;}
+.d1{background:#E0645A;} .d2{background:#E0B95A;} .d3{background:#54C792;}
+.term-title{
+  margin-right:auto;
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;
+  color:var(--text-2);
+  letter-spacing:1px;
+  direction:ltr;
+}
+.term-body{
+  padding:28px 30px 32px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:18px;
+  line-height:2.05;
+  direction:ltr;
+  text-align:left;
+}
+.term-body .cmd{color:var(--emerald);}
+.term-body .cmd::before{content:'> ';color:var(--text-2);}
+.term-body .label{color:var(--gold);}
+.term-body .num{color:var(--text-0);}
+.term-body .dim{color:var(--text-2);}
+.term-body .row{display:flex; gap:18px; white-space:pre;}
+
+.term-foot{
+  border-top:1px solid var(--line);
+  padding:16px 30px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#0A1110;
+}
+.term-foot .status{
+  display:flex;align-items:center;gap:9px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;
+  color:var(--emerald);
+  direction:ltr;
+}
+.term-foot .status .blip{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--emerald);
+  box-shadow:0 0 8px var(--emerald);
+}
+.term-foot .lessons{
+  font-size:15px;
+  color:var(--text-1);
+  font-weight:500;
+}
+.term-foot .lessons b{color:var(--gold);font-weight:700;}
+
+/* ---- bottom CTA / URL block ---- */
+.spacer{flex:1;}
+
+.cta-zone{
+  width:100%;
+  padding-bottom:150px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  z-index:2;
+}
+
+.cta-tag{
+  font-size:20px;
+  color:var(--text-1);
+  font-weight:500;
+  margin-bottom:22px;
+}
+
+.url-box{
+  position:relative;
+  padding:26px 64px;
+  border-radius:100px;
+  background:linear-gradient(180deg, rgba(217,179,112,0.10), rgba(217,179,112,0.02));
+  border:1.5px solid var(--gold-soft);
+  box-shadow:0 0 70px -12px rgba(217,179,112,0.35), inset 0 0 30px rgba(217,179,112,0.05);
+}
+.url-box .url{
+  font-family:'JetBrains Mono',monospace;
+  font-size:54px;
+  font-weight:700;
+  letter-spacing:1px;
+  direction:ltr;
+  background:linear-gradient(95deg,#F4E3BC,#D9B370 60%,#F4E3BC);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.foot-line{
+  margin-top:30px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  font-size:17px;
+  color:var(--text-2);
+}
+.foot-line .sep{width:5px;height:5px;border-radius:50%;background:var(--text-2);}
+.foot-line b{color:var(--text-1);font-weight:600;}
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="grid-overlay"></div>
+
+  <div class="brand">
+    <div class="mark">N</div>
+    <div class="eyebrow">NRS&nbsp;·&nbsp;NIRA RESERVATION SYSTEM</div>
+  </div>
+
+  <div class="headline-wrap">
+    <div class="eyebrow-fa">سیستم رزرواسیون و کنترل پرواز</div>
+    <h1>آموزش تعاملی نیرا</h1>
+    <div class="subtitle">یادگیری دستورات نیرا در <b>محیط واقعی ترمینال</b> — از Availability و صدور بلیط تا کنترل پرواز، با بیش از <b>۹۰ درس کاربردی</b></div>
+  </div>
+
+  <div class="terminal">
+    <div class="term-bar">
+      <div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div>
+      <div class="term-title">NRS TERMINAL — SESSION</div>
+    </div>
+    <div class="term-body">
+      <div class="row"><span class="cmd">YY FARES</span></div>
+      <div class="row"><span class="dim">1&nbsp;&nbsp;ADT</span>&nbsp;&nbsp;<span class="num">9,270,000.00</span>&nbsp;<span class="label">IRR</span>&nbsp;&nbsp;<span class="dim">2PS 20KG&nbsp; INF 10KG</span></div>
+      <div class="row"><span class="dim">2&nbsp;&nbsp;ADT</span>&nbsp;<span class="num">11,230,000.00</span>&nbsp;<span class="label">IRR</span>&nbsp;&nbsp;<span class="dim">2PS 20KG&nbsp; INF 10KG</span></div>
+      <div class="row"><span class="cmd">SCCLOSE</span><span class="dim">&nbsp;··&nbsp;FLIGHT CONTROL READY</span></div>
+    </div>
+    <div class="term-foot">
+      <div class="status"><span class="blip"></span>LIVE SIMULATOR</div>
+      <div class="lessons"><b>۹۰+</b> درس تعاملی</div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="cta-zone">
+    <div class="cta-tag">همین حالا شروع کن</div>
+    <div class="url-box"><span class="url">nirahelp.ir</span></div>
+    <div class="foot-line">
+      <span>کارشناسان آژانس</span><span class="sep"></span>
+      <span>صادرکنندگان بلیط</span><span class="sep"></span>
+      <span>کنترل پرواز ایرلاین‌ها</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
