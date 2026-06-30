@@ -2,29 +2,16 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>آموزش تعاملی نیرا</title>
+<title>درد دل ساده</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
-
-:root{
-  --bg-0:#070A0C;
-  --bg-1:#0C1416;
-  --line:#1C2A2C;
-  --gold:#D9B370;
-  --gold-soft:#B89456;
-  --emerald:#36D6A8;
-  --emerald-dim:#1B7A63;
-  --text-0:#F2F4F1;
-  --text-1:#9CA8A6;
-  --text-2:#5C6967;
-}
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap');
 
 *{margin:0;padding:0;box-sizing:border-box;}
 
 html,body{
   width:1080px;
   height:1920px;
-  background:var(--bg-0);
+  background:#0B0C0D;
   font-family:'Vazirmatn',sans-serif;
   overflow:hidden;
 }
@@ -34,270 +21,130 @@ html,body{
   width:1080px;
   height:1920px;
   background:
-    radial-gradient(ellipse 900px 500px at 50% -10%, rgba(54,214,168,0.10), transparent 60%),
-    radial-gradient(ellipse 700px 400px at 90% 100%, rgba(217,179,112,0.08), transparent 60%),
-    linear-gradient(180deg, #070A0C 0%, #0A1112 55%, #070A0C 100%);
+    radial-gradient(ellipse 800px 500px at 50% 8%, rgba(217,179,112,0.05), transparent 65%),
+    linear-gradient(180deg,#0A0B0C 0%, #0C0D0E 50%, #0A0B0C 100%);
   display:flex;
   flex-direction:column;
   align-items:center;
 }
 
-/* faint grid texture, echoes terminal screen */
-.grid-overlay{
-  position:absolute; inset:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
-  background-size:54px 54px;
-  mask-image:radial-gradient(ellipse 900px 700px at 50% 35%, black, transparent 75%);
-  -webkit-mask-image:radial-gradient(ellipse 900px 700px at 50% 35%, black, transparent 75%);
+/* subtle paper-grain feel via faint noise lines */
+.hairline{
+  width:64px;
+  height:1px;
+  background:linear-gradient(90deg, transparent, rgba(217,179,112,0.55), transparent);
 }
 
-/* ---- top mark ---- */
-.brand{
-  margin-top:130px;
+.top{
+  margin-top:120px;
   display:flex;
+  flex-direction:column;
   align-items:center;
-  gap:14px;
-  z-index:2;
+  gap:22px;
 }
-.brand .mark{
-  width:46px;height:46px;
-  border-radius:13px;
-  background:linear-gradient(155deg,#1E3633,#0E1A18);
-  border:1px solid rgba(54,214,168,0.35);
+
+.mark{
+  width:50px;height:50px;
+  border-radius:14px;
+  border:1px solid rgba(217,179,112,0.4);
   display:flex;align-items:center;justify-content:center;
   font-family:'JetBrains Mono',monospace;
-  font-weight:700;
-  font-size:22px;
-  color:var(--emerald);
-  box-shadow:0 0 22px rgba(54,214,168,0.18);
-}
-.brand .eyebrow{
-  font-family:'JetBrains Mono',monospace;
-  font-size:18px;
-  letter-spacing:2px;
-  color:var(--text-1);
-  direction:ltr;
+  font-weight:600;
+  font-size:23px;
+  color:#D9B370;
 }
 
-/* ---- headline ---- */
-.headline-wrap{
-  margin-top:60px;
-  text-align:center;
-  z-index:2;
-  padding:0 50px;
-}
-.eyebrow-fa{
-  font-size:29px;
+.eyebrow{
+  font-size:20px;
+  color:#6E7679;
+  letter-spacing:1px;
   font-weight:500;
-  color:var(--emerald);
-  letter-spacing:.5px;
-  margin-bottom:18px;
+}
+
+.body-wrap{
+  flex:1;
+  width:100%;
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:10px;
-}
-.eyebrow-fa::before,.eyebrow-fa::after{
-  content:'';
-  width:30px;height:1px;
-  background:linear-gradient(90deg,transparent,var(--emerald-dim));
-}
-.eyebrow-fa::after{transform:scaleX(-1);}
-
-h1{
-  font-size:152px;
-  font-weight:800;
-  line-height:1.22;
-  background:linear-gradient(95deg,#F4F1E8 0%, #D9B370 48%, #F4F1E8 100%);
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-  letter-spacing:-1px;
+  padding:0 92px;
 }
 
-.subtitle{
-  margin-top:36px;
-  font-size:38px;
+.confession{
+  font-size:40px;
+  line-height:2.12;
   font-weight:400;
-  color:var(--text-1);
-  line-height:1.8;
+  color:#D7D9D6;
+  text-align:right;
   max-width:920px;
-  margin-left:auto;
-  margin-right:auto;
 }
-.subtitle b{color:var(--text-0);font-weight:600;}
 
-/* ---- terminal signature element ---- */
-.terminal{
-  margin-top:64px;
-  width:980px;
-  border-radius:18px;
-  background:linear-gradient(180deg,#0C1414,#080D0D);
-  border:1px solid var(--line);
-  box-shadow:
-    0 0 0 1px rgba(54,214,168,0.06),
-    0 40px 80px -30px rgba(0,0,0,0.7),
-    0 0 60px -10px rgba(54,214,168,0.10);
-  overflow:hidden;
-  z-index:2;
+.confession .em{
+  color:#EDEBE3;
+  font-weight:600;
 }
-.term-bar{
-  height:46px;
-  display:flex;
-  align-items:center;
-  padding:0 20px;
-  gap:9px;
-  background:#0A1110;
-  border-bottom:1px solid var(--line);
-}
-.dot{width:11px;height:11px;border-radius:50%;}
-.d1{background:#E0645A;} .d2{background:#E0B95A;} .d3{background:#54C792;}
-.term-title{
-  margin-right:auto;
-  font-family:'JetBrains Mono',monospace;
-  font-size:13px;
-  color:var(--text-2);
-  letter-spacing:1px;
-  direction:ltr;
-}
-.term-body{
-  padding:36px 38px 40px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:27px;
-  line-height:2.0;
-  direction:ltr;
-  text-align:left;
-}
-.term-body .cmd{color:var(--emerald);}
-.term-body .cmd::before{content:'> ';color:var(--text-2);}
-.term-body .label{color:var(--gold);}
-.term-body .num{color:var(--text-0);}
-.term-body .dim{color:var(--text-2);}
-.term-body .row{display:flex; gap:18px; white-space:pre;}
 
-.term-foot{
-  border-top:1px solid var(--line);
-  padding:16px 30px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  background:#0A1110;
+.confession .gold{
+  color:#D9B370;
+  font-weight:600;
 }
-.term-foot .status{
-  display:flex;align-items:center;gap:9px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:16px;
-  color:var(--emerald);
-  direction:ltr;
-}
-.term-foot .status .blip{
-  width:7px;height:7px;border-radius:50%;
-  background:var(--emerald);
-  box-shadow:0 0 8px var(--emerald);
-}
-.term-foot .lessons{
-  font-size:19px;
-  color:var(--text-1);
-  font-weight:500;
-}
-.term-foot .lessons b{color:var(--gold);font-weight:700;}
 
-/* ---- bottom CTA / URL block ---- */
-.spacer{height:36px;}
+.confession p{
+  margin-bottom:44px;
+}
+.confession p:last-child{margin-bottom:0;}
 
-.cta-zone{
+.bottom{
   width:100%;
-  padding-bottom:80px;
+  padding-bottom:110px;
   display:flex;
   flex-direction:column;
   align-items:center;
-  z-index:2;
+  gap:28px;
 }
 
-.cta-tag{
-  font-size:30px;
-  color:var(--text-1);
-  font-weight:500;
-  margin-bottom:28px;
-}
-
-.url-box{
-  position:relative;
-  padding:36px 50px;
-  border-radius:120px;
-  background:linear-gradient(180deg, rgba(217,179,112,0.12), rgba(217,179,112,0.02));
-  border:2px solid var(--gold-soft);
-  box-shadow:0 0 90px -10px rgba(217,179,112,0.45), inset 0 0 36px rgba(217,179,112,0.06);
-}
-.url-box .url{
+.url{
   font-family:'JetBrains Mono',monospace;
-  font-size:94px;
+  font-size:88px;
   font-weight:700;
   letter-spacing:0px;
   direction:ltr;
-  background:linear-gradient(95deg,#F4E3BC,#D9B370 60%,#F4E3BC);
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
+  color:#F2E6CB;
+  position:relative;
 }
 
-.foot-line{
-  margin-top:36px;
-  display:flex;
-  align-items:center;
-  gap:18px;
-  font-size:24px;
-  color:var(--text-2);
+.url::after{
+  content:'';
+  position:absolute;
+  left:0; right:0; bottom:-22px;
+  height:1px;
+  background:linear-gradient(90deg, transparent, rgba(217,179,112,0.6), transparent);
 }
-.foot-line .sep{width:5px;height:5px;border-radius:50%;background:var(--text-2);}
-.foot-line b{color:var(--text-1);font-weight:600;}
 </style>
 </head>
 <body>
 <div class="poster">
-  <div class="grid-overlay"></div>
 
-  <div class="brand">
+  <div class="top">
     <div class="mark">N</div>
-    <div class="eyebrow">NRS&nbsp;·&nbsp;NIRA RESERVATION SYSTEM</div>
+    <div class="hairline"></div>
+    <div class="eyebrow">یادداشتی از معمار آموزش نیرا</div>
   </div>
 
-  <div class="headline-wrap">
-    <div class="eyebrow-fa">سیستم رزرواسیون و کنترل پرواز</div>
-    <h1>آموزش تعاملی نیرا</h1>
-    <div class="subtitle">یادگیری دستورات نیرا در <b>محیط واقعی ترمینال</b> — از Availability و صدور بلیط تا کنترل پرواز، با بیش از <b>۹۰ درس کاربردی</b></div>
-  </div>
+  <div class="body-wrap">
+    <div class="confession">
+      <p>آموزش را <span class="em">خیلی دوست دارم</span>؛ چون در صنعت سفر، حداقل در ایران، کسی برایم آموزش نداده بود. هر چه آموختم، خودآموز بود.</p>
 
-  <div class="terminal">
-    <div class="term-bar">
-      <div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div>
-      <div class="term-title">NRS TERMINAL — SESSION</div>
-    </div>
-    <div class="term-body">
-      <div class="row"><span class="cmd">SC/ALL/21AUG/SF</span></div>
-      <div class="row"><span class="dim">1&nbsp;&nbsp;YY 3672&nbsp;</span><span class="label">DA YA NA</span><span class="dim">&nbsp;&nbsp;TH21AUG THRIFN 2200 2300</span></div>
-      <div class="row"><span class="dim">2&nbsp;&nbsp;YY 3673&nbsp;</span><span class="label">DA YA</span><span class="dim">&nbsp;&nbsp;&nbsp;&nbsp;TH21AUG IFNTHR 2200 2300</span></div>
-      <div class="row"><span class="dim">3&nbsp;&nbsp;YY 4121&nbsp;</span><span class="label">DA YA GC</span><span class="dim">&nbsp;&nbsp;TH21AUG THRAZD 2000 2100</span></div>
-      <div class="row"><span class="cmd">SCCLOSE</span><span class="dim">&nbsp;··&nbsp;FLIGHT CONTROL READY</span></div>
-    </div>
-    <div class="term-foot">
-      <div class="status"><span class="blip"></span>LIVE SIMULATOR</div>
-      <div class="lessons"><b>۹۰+</b> درس تعاملی</div>
+      <p>اما سال‌های اخیر، در گروه <span class="gold">آمادئوس</span> نگاهم را عوض کرد؛ جایی که با وجود جایگاه‌های شغلیِ قوی، بچه‌ها بی‌منت و بی‌ادعا، از سراسر دنیا، هر روز دانسته‌هاشان را به هم یاد می‌دهند.</p>
+
+      <p>برای همین تصمیم گرفتم هر چه می‌دانم را به اشتراک بگذارم. نرم‌افزارهای کاربردی در ایران کم‌اند، اما آموزشش را پیاده می‌کنم؛ و کنارش، سامانه‌های بین‌المللی را هم خواهم گذاشت، تا ببینیم دنیای ما چقدر محدود است.</p>
+
+      <p><span class="em">نیرا</span> یکی از اولین مجموعه‌های آموزشی این حوزه بود. از این پس، هر هفته یکی از نرم‌افزارهای کاربردی هواپیمایی و ایرلاین را منتشر می‌کنم.</p>
     </div>
   </div>
 
-  <div class="spacer"></div>
-
-  <div class="cta-zone">
-    <div class="cta-tag">همین حالا شروع کن</div>
-    <div class="url-box"><span class="url">nirahelp.ir</span></div>
-    <div class="foot-line">
-      <span>کارشناسان آژانس</span><span class="sep"></span>
-      <span>صادرکنندگان بلیط</span><span class="sep"></span>
-      <span>کنترل پرواز ایرلاین‌ها</span>
-    </div>
+  <div class="bottom">
+    <div class="url">nirahelp.ir</div>
   </div>
 
 </div>
